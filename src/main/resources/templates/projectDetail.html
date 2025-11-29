@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails du projet</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .header h1 {
+            color: #2a5298;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .status-item .info-value {
+            margin-top: 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            width: fit-content;
+            margin-left: -0.75rem;
+        }
+
+        .status-en_cours {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-termine {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-annule {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .members-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            margin-bottom: 2rem;
+        }
+
+        .members-section h2 {
+            color: #2a5298;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 0.75rem;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .member-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .member-name {
+            color: #2a5298;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            background: #2a5298;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .no-members {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .btn {
+            background: #2a5298;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #1e3c72;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+        }
+
+        .btn-primary:hover {
+            background: #229954;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- En-tête du projet -->
+    <div class="header">
+        <h1 th:text="${project.name}"></h1>
+        
+        <div class="project-info">
+            <div class="info-item">
+                <span class="info-label">Description</span>
+                <span class="info-value" th:text="${project.description}"></span>
+            </div>
+            <div class="info-item status-item">
+                <span class="info-label">Status</span>
+                <span class="status-badge" th:classappend="${'status-' + project.status}" th:text="${project.status}"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Date de début</span>
+                <span class="info-value" th:text="${#dates.format(project.startDate, 'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Date de fin</span>
+                <span class="info-value" th:text="${#dates.format(project.endDate, 'dd/MM/yyyy')}"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section des membres -->
+    <div class="members-section">
+        <h2>Membres du projet</h2>
+        
+        <div th:if="${members.size() > 0}">
+            <div class="members-grid">
+                <div class="member-card" th:each="member : ${members}">
+                    <div class="member-name" th:text="${member.firstName + ' ' + member.lastName}"></div>
+                    <span class="member-role" th:text="${projectAssignments[member.id]}"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="no-members" th:if="${members.size() == 0}">
+            <p>Aucun membre assigné à ce projet</p>
+        </div>
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="actions">
+        <a th:href="'/project/' + ${project.id} + '/assign'" class="btn btn-primary">Affecter un employé</a>
+        <a th:href="'/project/' + ${project.id} + '/edit'" class="btn">Éditer</a>
+        <a href="/project/list" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
+</body>
+</html>

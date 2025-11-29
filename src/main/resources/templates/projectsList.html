@@ -47,8 +47,9 @@
             </td>
             <td th:text="${project.status}"></td>
             <td>
-                <a th:href="'/project/' + ${project.id}" class="btn">Voir</a>
+                <a th:href="'/project/' + ${project.id}" class="btn">Voir projet</a>
                 <a th:href="'/project/' + ${project.id} + '/edit'" class="btn">Éditer</a>
+                <a th:href="'/project/' + ${project.id} + '/assign'" class="btn">Affecter un employé</a>
                 <form th:action="'/project/' + ${project.id} + '/delete'" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
                 </form>

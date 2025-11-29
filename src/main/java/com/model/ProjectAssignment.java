@@ -4,14 +4,13 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "project_assignments")
+@IdClass(ProjectAssignmentId.class)
 public class ProjectAssignment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @Column(name = "project_id")
     private Integer projectId;
 
+    @Id
     @Column(name = "employee_id")
     private Integer employeeId;
 
@@ -27,14 +26,6 @@ public class ProjectAssignment {
     }
 
     // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public Integer getProjectId() {
         return projectId;
     }
