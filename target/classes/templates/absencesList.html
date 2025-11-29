@@ -5,38 +5,86 @@
     <title>Liste des absences</title>
     <style>
         body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
-        h2 { text-align:center; color:#fff; margin-bottom:1rem; }
-        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        h2 { text-align:center; color:#fff; margin-bottom:2rem; }
+        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); margin-bottom:2rem; }
         th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
         th { background:#2a5298; color:#fff; }
         tr:nth-child(even) { background:#f9f9f9; }
         .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
         .btn:hover { background:#1e3c72; cursor: pointer; }
         .actions { text-align:center; margin-top:1rem; }
+        
+        .search-filters-container { background:#fff; border-radius:15px; padding:1.5rem; margin-bottom:2rem; box-shadow:0 8px 25px rgba(0,0,0,0.2); border-left:5px solid #2a5298; max-width:500px; margin-left:auto; margin-right:auto; }
+        .search-filters-title { color:#2a5298; font-size:1.2rem; font-weight:bold; margin-bottom:1rem; text-align:center; text-transform:uppercase; letter-spacing:1px; }
+        .search-section { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; margin-bottom:2rem; }
+        .search-section select { padding:1rem; border:2px solid #e0e0e0; border-radius:10px; font-size:1rem; transition:all 0.3s ease; background-color:#fafafa; }
+        .search-section select:focus { outline:none; border-color:#2a5298; background-color:#fff; box-shadow:0 0 8px rgba(42, 82, 152, 0.2); }
+        
+        .button-section { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem; }
+        .search-btn, .reset-btn { padding:1rem 2.5rem; border:none; color:white; border-radius:10px; cursor:pointer; font-weight:bold; font-size:1rem; white-space:nowrap; transition:all 0.3s; box-shadow:0 4px 12px rgba(0,0,0,0.15); text-transform:uppercase; letter-spacing:0.5px; }
+        .search-btn { background:linear-gradient(135deg, #2a5298, #1e3c72); }
+        .search-btn:hover { background:linear-gradient(135deg, #1e3c72, #152c4f); transform:translateY(-3px); box-shadow:0 8px 16px rgba(0,0,0,0.25); }
+        .reset-btn { background:linear-gradient(135deg, #95a5a6, #7f8c8d); }
+        .reset-btn:hover { background:linear-gradient(135deg, #7f8c8d, #6b7778); transform:translateY(-3px); box-shadow:0 8px 16px rgba(0,0,0,0.25); }
     </style>
 </head>
 <body>
 <h2>Liste des absences</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>ID Employé</th>
-        <th>Date</th>
-        <th>Type</th>
-        <th>Heures</th>
-    </tr>
-    <tr th:each="absence : ${absences}">
-        <td th:text="${absence.id}"></td>
-        <td th:text="${absence.employeeId}"></td>
-        <td th:text="${absence.date}"></td>
-        <td th:text="${absence.type}"></td>
-        <td th:text="${absence.hours}"></td>
-    </tr>
-</table>
+
+<div class="search-filters-container">
+    <div class="search-filters-title">Rechercher absences</div>
+    
+    <form action="/absence/list" method="get" id="searchForm">
+        <div class="search-section">
+            <select name="employeeId">
+                <option value="">-- Choisir un employé --</option>
+                <option th:each="emp : ${employees}" th:value="${emp.id}" th:text="${emp.lastName + ' ' + emp.firstName}" th:selected="${emp.id == selectedEmployeeId}"></option>
+            </select>
+        </div>
+        
+        <div class="button-section">
+            <button type="submit" class="search-btn">🔍 Rechercher</button>
+            <button type="button" class="reset-btn" onclick="resetAndReload()">↺ Initialiser</button>
+        </div>
+    </form>
+</div>
+
+<div th:if="${selectedEmployeeId != null && selectedEmployeeId > 0}">
+    <h3 style="color:#fff; text-align:center; margin-top:2rem; margin-bottom:2rem;">Historique des absences</h3>
+    <div th:if="${absences.size() > 0}" style="display:grid; gap:1rem; max-width:700px; margin:auto;">
+        <div th:each="absence : ${absences}" style="background:#fff; border-radius:12px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.15); border-left:5px solid #f39c12;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="flex:1;">
+                    <p style="margin:0; font-size:1.2rem; font-weight:bold; color:#2a5298;" th:text="${#dates.format(absence.date, 'dd MMMM yyyy')}"></p>
+                    <p style="margin:0.5rem 0 0 0; color:#666; font-size:0.95rem;" th:text="${absence.type}"></p>
+                </div>
+                <div style="text-align:right; background:#f0f0f0; padding:1rem; border-radius:8px;">
+                    <p style="margin:0; font-size:0.9rem; color:#666;">Heures</p>
+                    <p style="margin:0.5rem 0 0 0; font-size:1.5rem; font-weight:bold; color:#2a5298;" th:text="${absence.hours}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:if="${absences.size() == 0}" style="text-align:center; color:#fff; font-size:1rem; margin-top:2rem; background:rgba(255,255,255,0.1); padding:2rem; border-radius:12px;">
+        <p>Aucune absence enregistrée pour cet employé</p>
+    </div>
+</div>
+
+<div th:if="${selectedEmployeeId == null || selectedEmployeeId == 0}" style="text-align:center; color:#fff; font-size:1.1rem; margin-top:3rem; background:rgba(255,255,255,0.1); padding:2rem; border-radius:12px; max-width:500px; margin-left:auto; margin-right:auto;">
+    <p>Sélectionnez un employé pour voir son historique d'absences</p>
+</div>
 
 <div class="actions">
     <a href="/absence/create/form" class="btn">Ajouter une absence</a>
-    <a href="/dashboard.jsp" class="btn">Retour au tableau de bord</a>
+    <a href="/dashboard" class="btn">Retour au tableau de bord</a>
 </div>
+
+<script>
+    function resetAndReload() {
+        document.getElementById('searchForm').reset();
+        window.location.href = '/absence/list';
+    }
+</script>
 </body>
 </html>
