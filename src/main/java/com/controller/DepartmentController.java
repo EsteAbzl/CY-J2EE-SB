@@ -86,6 +86,13 @@ public class DepartmentController {
         return "redirect:/department/list";
     }
 
+    @GetMapping("/remove/form")
+    public String removeForm(Model model) {
+        List<Department> departments = departmentRepository.findAll();
+        model.addAttribute("departments", departments);
+        return "deleteDepartment";
+    }
+
     @PostMapping("/{id}/delete")
     public String deleteDepartment(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         departmentRepository.deleteById(id);

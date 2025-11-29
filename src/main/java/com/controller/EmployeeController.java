@@ -144,6 +144,13 @@ public class EmployeeController {
         return "redirect:/employee/list";
     }
 
+    @GetMapping("/deactivate/form")
+    public String deactivateForm(Model model) {
+        List<Employee> employees = employeeRepository.findAll();
+        model.addAttribute("employees", employees);
+        return "deactivateEmployee";
+    }
+
     @PostMapping("/{id}/delete")
     public String deleteEmployee(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         employeeRepository.deleteById(id);

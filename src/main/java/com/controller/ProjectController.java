@@ -122,6 +122,13 @@ public class ProjectController {
         return "redirect:/project/list";
     }
 
+    @GetMapping("/delete/form")
+    public String deleteForm(Model model) {
+        List<Project> projects = projectRepository.findAll();
+        model.addAttribute("projects", projects);
+        return "deleteProject";
+    }
+
     @PostMapping("/{id}/delete")
     public String deleteProject(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         projectRepository.deleteById(id);

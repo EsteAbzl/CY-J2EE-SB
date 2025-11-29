@@ -4,175 +4,52 @@
     <meta charset="UTF-8">
     <title>Liste des employés</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 2rem;
-            min-height: 100vh;
-        }
-        h2 { 
-            text-align: center;
-            color: #fff;
-            margin-bottom: 2.5rem;
-            font-size: 2.2rem;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-        .search-bar { 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin: 0 auto 2.5rem;
-            flex-wrap: wrap;
-            max-width: 1100px;
-            padding: 1.5rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 14px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-        }
-        .search-bar input, .search-bar select { 
-            padding: 0.85rem 1.1rem;
-            border: 2px solid rgba(255,255,255,0.25);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            background: rgba(255,255,255,0.95);
-            transition: all 0.3s ease;
-            font-weight: 500;
-            color: #2d3748;
-        }
-        .search-bar input::placeholder {
-            color: #999;
-        }
-        .search-bar input:focus, .search-bar select:focus { 
-            outline: none;
-            border-color: #fff;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
-            transform: translateY(-2px);
-        }
-        .search-bar input { flex: 1; min-width: 220px; }
-        .search-bar select { min-width: 140px; }
-        .search-bar button { 
-            padding: 0.85rem 2rem;
-            border: none;
-            background: linear-gradient(135deg, #2a5298, #1e3c72);
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.4);
-            white-space: nowrap;
-        }
-        .search-bar button:hover { 
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(42, 82, 152, 0.6);
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-        }
-        .search-bar button:active { transform: translateY(-1px); }
-
-        .table-container {
-            background: rgba(255,255,255,0.98);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            margin: 0 auto 2rem;
-            max-width: 1200px;
-        }
-        table { 
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th { 
-            background: linear-gradient(135deg, #2a5298, #1e3c72);
-            color: #fff;
-            padding: 1rem 0.8rem;
-            text-align: left;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            font-size: 0.95rem;
-        }
-        td { 
-            padding: 1rem 0.8rem;
-            border-bottom: 1px solid #e9ecef;
-            color: #2d3748;
-            font-size: 0.9rem;
-        }
-        tr:hover { background: #f8f9fa; transition: background 0.2s ease; }
-        tr:last-child td { border-bottom: none; }
-        
-        .btn { 
-            display: inline-block;
-            background: linear-gradient(135deg, #2a5298, #1e3c72);
-            color: #fff;
-            text-decoration: none;
-            padding: 0.6rem 1.1rem;
-            border-radius: 7px;
-            font-weight: 600;
-            margin: 0.25rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
-        }
-        .btn:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.5);
-        }
-        .btn-danger { 
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
-        }
-        .btn-danger:hover { 
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
-            background: linear-gradient(135deg, #c0392b, #e74c3c);
-        }
-        
-        .actions { 
-            text-align: center;
-            margin-top: 2rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .actions .btn {
-            padding: 0.8rem 1.8rem;
-            font-size: 0.95rem;
-            font-weight: 700;
-        }
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
+        h2 { text-align:center; color:#fff; margin-bottom:1rem; }
+        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
+        th { background:#2a5298; color:#fff; }
+        tr:nth-child(even) { background:#f9f9f9; }
+        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
+        .btn:hover { background:#1e3c72; cursor: pointer; }
+        .btn-danger { background:#c0392b; }
+        .btn-danger:hover { background:#962d22; }
+        .actions { text-align:center; margin-top:1rem; }
+        .search-bar { display: flex; justify-content: center; margin: 20px; }
+        .search-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px 0 0 8px; width: 250px; }
+        .search-bar button { padding: 0.5rem 1rem; border: none; background: #2a5298; color: white; border-radius: 0 8px 8px 0; cursor: pointer; }
+        .search-bar button:hover { background: #1e3c72; }
+        .filters { display: flex; justify-content: center; gap: 10px; margin: 20px; flex-wrap: wrap; }
+        .filters select { padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px; }
     </style>
 </head>
 <body>
 <h2>Liste des employés</h2>
-<form action="/employee/list" method="get" class="search-bar">
-    <input type="text" name="query" placeholder="🔍 Nom, prénom ou matricule">
-    
+<div>
+    <form action="/employee/list" method="get" class="search-bar">
+        <input type="text" name="query" placeholder="Nom, prénom ou matricule">
+        <button type="submit">🔍 Rechercher</button>
+    </form>
+</div>
+<form action="/employee/list" method="get" class="filters" id="filters">
     <select name="grade">
-        <option value="">Grade</option>
+        <option value="">-- Grade --</option>
         <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}"></option>
     </select>
 
     <select name="position">
-        <option value="">Poste</option>
+        <option value="">-- Poste --</option>
         <option th:each="position : ${positions}" th:value="${position}" th:text="${position}"></option>
     </select>
 
     <select name="department">
-        <option value="">Département</option>
+        <option value="">-- Département --</option>
         <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}"></option>
     </select>
 
-    <button type="submit">🔎 Chercher</button>
+    <button type="submit" class="btn">Appliquer</button>
 </form>
 
-<div class="table-container">
 <table>
     <tr>
         <th>ID</th>
@@ -199,7 +76,6 @@
         </td>
     </tr>
 </table>
-</div>
 
 <div class="actions">
     <a href="/employee/create/form" class="btn">Ajouter un employé</a>
