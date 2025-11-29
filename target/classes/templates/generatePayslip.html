@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un bulletin de paie</title>
+    <style>
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; padding:2rem; min-height:100vh; margin:0; }
+        h2 { text-align:center; color:#fff; }
+        form { background:#fff; border-radius:12px; padding:2rem; max-width:600px; margin:auto; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        label { display:block; margin-top:1rem; font-weight:bold; color:#2a5298; }
+        input, select { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; margin-top:.25rem; box-sizing: border-box; }
+        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; margin-top:1rem; cursor:pointer; width:100%; }
+        .btn:hover { background:#1e3c72; }
+        .btn-cancel { background:#95a5a6; }
+        .btn-cancel:hover { background:#7f8c8d; }
+    </style>
+</head>
+<body>
+<h2>Créer un bulletin de paie</h2>
+<form action="/payslip/PayslipCreateServlet" method="post">
+    <label>Employé</label>
+    <select name="employeeId" required>
+        <option value="">-- Sélectionner un employé --</option>
+        <option th:each="emp : ${employees}" th:value="${emp.id}" th:text="${emp.firstName + ' ' + emp.lastName}"></option>
+    </select>
+
+    <label>Année</label>
+    <input type="number" name="periodYear" required>
+
+    <label>Mois</label>
+    <input type="number" name="periodMonth" min="1" max="12" required>
+
+    <label>Salaire de base</label>
+    <input type="number" name="baseSalary" step="0.01" required>
+
+    <label>Bonus</label>
+    <input type="number" name="bonuses" step="0.01" value="0">
+
+    <label>Déductions</label>
+    <input type="number" name="deductions" step="0.01" value="0">
+
+    <label>Salaire net</label>
+    <input type="number" name="netPay" step="0.01" required>
+
+    <button class="btn" type="submit">Créer le bulletin</button>
+    <a href="/payslip/list" class="btn btn-cancel">Annuler</a>
+</form>
+</body>
+</html>

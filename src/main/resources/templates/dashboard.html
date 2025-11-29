@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord administrateur</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 50px;
+            margin: 0;
+        }
+        
+        .logout-btn {
+            background: #c0392b;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #962d22;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+            margin-top: 5rem;
+        }
+        
+        .dashboard-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        
+        .dashboard-card h3 {
+            color: #2a5298;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 0.75rem;
+        }
+        
+        .dashboard-card .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .dashboard-card .btn {
+            display: block;
+            background: #2a5298;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .dashboard-card .btn:hover {
+            background: #1e3c72;
+        }
+    </style>
+<body>
+<div class="container">
+    <div class="header">
+        <a href="/logout" class="logout-btn">Déconnexion</a>
+        <h1>Tableau de bord</h1>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- EMPLOYÉS -->
+        <div class="dashboard-card">
+            <h3>Employés</h3>
+            <div class="btn-group">
+                <a href="/employee/create/form" class="btn">Ajouter</a>
+                <a href="/employee/deactivate/form" class="btn">Supprimer</a>
+                <a href="/employee/list" class="btn">Voir liste</a>
+                <a href="/payslip/list" class="btn">Fiche de paie</a>
+                <a href="/absence/list" class="btn">Liste d'absence</a>
+            </div>
+        </div>
+
+        <!-- DÉPARTEMENTS -->
+        <div class="dashboard-card">
+            <h3>Départements</h3>
+            <div class="btn-group">
+                <a href="/department/create/form" class="btn">Ajouter</a>
+                <a href="/department/remove/form" class="btn">Supprimer</a>
+                <a href="/department/list" class="btn">Voir la liste</a>
+            </div>
+        </div>
+
+        <!-- PROJETS -->
+        <div class="dashboard-card">
+            <h3>Projets</h3>
+            <div class="btn-group">
+                <a href="/project/create/form" class="btn">Ajouter</a>
+                <a href="/project/delete/form" class="btn">Supprimer</a>
+                <a href="/project/list" class="btn">Voir la liste</a>
+                <a href="#" class="btn">Affecter employé</a>
+            </div>
+        </div>
+
+        <!-- RAPPORTS -->
+        <div class="dashboard-card">
+            <h3>Rapports</h3>
+            <div class="btn-group">
+                <a href="#" class="btn">Statistiques</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

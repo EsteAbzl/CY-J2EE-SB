@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter une absence</title>
+    <style>
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; padding:2rem; min-height:100vh; margin:0; }
+        h2 { text-align:center; color:#fff; }
+        form { background:#fff; border-radius:12px; padding:2rem; max-width:600px; margin:auto; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        label { display:block; margin-top:1rem; font-weight:bold; color:#2a5298; }
+        input, select { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; margin-top:.25rem; box-sizing: border-box; }
+        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; margin-top:1rem; cursor:pointer; width:100%; }
+        .btn:hover { background:#1e3c72; }
+        .btn-cancel { background:#95a5a6; }
+        .btn-cancel:hover { background:#7f8c8d; }
+    </style>
+</head>
+<body>
+<h2>Ajouter une absence</h2>
+<form action="/absence/AbsenceServlet" method="post">
+    <label>ID Employé</label>
+    <input type="number" name="employeeId" required>
+
+    <label>Date</label>
+    <input type="date" name="date" required>
+
+    <label>Type</label>
+    <select name="type">
+        <option value="CONGE">Congé</option>
+        <option value="MALADIE">Maladie</option>
+        <option value="NON_PAYE">Non payé</option>
+    </select>
+
+    <label>Heures</label>
+    <input type="number" name="hours" value="8" min="0" max="24">
+
+    <button class="btn" type="submit">Enregistrer l'absence</button>
+    <a href="/absence/list" class="btn btn-cancel">Annuler</a>
+</form>
+</body>
+</html>

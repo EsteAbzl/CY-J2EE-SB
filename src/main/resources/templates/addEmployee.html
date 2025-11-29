@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un employé</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        h2 { 
+            text-align: center;
+            color: #fff;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        form { 
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        
+        label { 
+            display: block;
+            margin-top: 1.25rem;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 0.5rem;
+        }
+        
+        input, select, textarea { 
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42, 82, 152, 0.3);
+        }
+        
+        .date-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .date-group select {
+            width: 100%;
+        }
+        
+        .date-group label {
+            margin: 0;
+            font-size: 0.85rem;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn { 
+            background: #2a5298;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn:hover { 
+            background: #1e3c72;
+        }
+        
+        .btn-cancel { 
+            background: #95a5a6;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-cancel:hover { 
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+<h2>Ajouter un employé</h2>
+<form action="/employee/EmployeeCreateServlet" method="post">
+    <label>Prénom</label>
+    <input type="text" name="first_name" required>
+
+    <label>Nom</label>
+    <input type="text" name="last_name" required>
+
+    <label>Email</label>
+    <input type="email" name="email" required>
+
+    <label>Grade</label>
+    <input type="text" name="grade">
+
+    <label>Titre du Poste</label>
+    <input type="text" name="position_title">
+
+    <label>Salaire de Base</label>
+    <input type="number" name="base_salary" step="0.01" required>
+
+    <label>Département</label>
+    <select name="department_id">
+        <option value="">-- Sélectionner un département --</option>
+        <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}"></option>
+    </select>
+
+    <label>Date d'embauche</label>
+    <div class="date-group">
+        <div>
+            <label style="margin-top: 0; font-size: 0.85rem;">Jour</label>
+            <select name="hire_day">
+                <option value="">--</option>
+                <option th:each="day : ${#numbers.sequence(1, 31)}" th:value="${day}" th:text="${day}"></option>
+            </select>
+        </div>
+        <div>
+            <label style="margin-top: 0; font-size: 0.85rem;">Mois</label>
+            <select name="hire_month">
+                <option value="">--</option>
+                <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"></option>
+            </select>
+        </div>
+        <div>
+            <label style="margin-top: 0; font-size: 0.85rem;">Année</label>
+            <select name="hire_year">
+                <option value="">--</option>
+                <option th:each="year : ${#numbers.sequence(2020, 2030)}" th:value="${year}" th:text="${year}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a href="/dashboard" class="btn btn-cancel">✕ Annuler</a>
+        <button class="btn" type="submit">✓ Créer l'employé</button>
+    </div>
+</form>
+</body>
+</html>

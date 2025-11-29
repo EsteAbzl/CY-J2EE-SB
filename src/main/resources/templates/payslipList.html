@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des bulletins de paie</title>
+    <style>
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
+        h2 { text-align:center; color:#fff; margin-bottom:1rem; }
+        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
+        th { background:#2a5298; color:#fff; }
+        tr:nth-child(even) { background:#f9f9f9; }
+        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
+        .btn:hover { background:#1e3c72; cursor: pointer; }
+        .actions { text-align:center; margin-top:1rem; }
+    </style>
+</head>
+<body>
+<h2>Liste des bulletins de paie</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>ID Employé</th>
+        <th>Année</th>
+        <th>Mois</th>
+        <th>Salaire de base</th>
+        <th>Bonus</th>
+        <th>Déductions</th>
+        <th>Salaire net</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="payslip : ${payslips}">
+        <td th:text="${payslip.id}"></td>
+        <td th:text="${payslip.employeeId}"></td>
+        <td th:text="${payslip.periodYear}"></td>
+        <td th:text="${payslip.periodMonth}"></td>
+        <td th:text="${payslip.baseSalary}"></td>
+        <td th:text="${payslip.bonuses}"></td>
+        <td th:text="${payslip.deductions}"></td>
+        <td th:text="${payslip.netPay}"></td>
+        <td>
+            <a th:href="'/payslip/' + ${payslip.id} + '/print'" class="btn">Imprimer</a>
+        </td>
+    </tr>
+</table>
+
+<div class="actions">
+    <a href="/payslip/create/form" class="btn">Créer un bulletin</a>
+    <a href="/dashboard" class="btn">Retour au tableau de bord</a>
+</div>
+</body>
+</html>

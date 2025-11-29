@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des absences</title>
+    <style>
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
+        h2 { text-align:center; color:#fff; margin-bottom:1rem; }
+        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
+        th { background:#2a5298; color:#fff; }
+        tr:nth-child(even) { background:#f9f9f9; }
+        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
+        .btn:hover { background:#1e3c72; cursor: pointer; }
+        .actions { text-align:center; margin-top:1rem; }
+    </style>
+</head>
+<body>
+<h2>Liste des absences</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>ID Employé</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Heures</th>
+    </tr>
+    <tr th:each="absence : ${absences}">
+        <td th:text="${absence.id}"></td>
+        <td th:text="${absence.employeeId}"></td>
+        <td th:text="${absence.date}"></td>
+        <td th:text="${absence.type}"></td>
+        <td th:text="${absence.hours}"></td>
+    </tr>
+</table>
+
+<div class="actions">
+    <a href="/absence/create/form" class="btn">Ajouter une absence</a>
+    <a href="/dashboard" class="btn">Retour au tableau de bord</a>
+</div>
+</body>
+</html>

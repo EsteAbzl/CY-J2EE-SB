@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer un département</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #2a5298;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .info-text {
+            background: #fff3cd;
+            border-left: 4px solid #e67e22;
+            padding: 1rem;
+            border-radius: 4px;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .dept-list {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .dept-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .dept-item:last-child {
+            border-bottom: none;
+        }
+
+        .dept-item:hover {
+            background: #f0f0f0;
+        }
+
+        .dept-item input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        button, a {
+            padding: 0.85rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            text-align: center;
+        }
+
+        button {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-cancel {
+            background: #95a5a6;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .btn-cancel:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Supprimer un département</h2>
+    
+    <div class="info-text">
+        ⚠️ Attention : Cette action supprimera définitivement le département et toutes ses données associées. 
+        Cette opération est irréversible.
+    </div>
+
+    <label>Sélectionnez le département à supprimer :</label>
+    <div class="dept-list">
+        <div class="dept-item" th:each="dept : ${departments}">
+            <input 
+                type="radio" 
+                name="deptId" 
+                th:value="${dept.id}" 
+                th:id="'dept' + ${dept.id}"
+            >
+            <label th:for="'dept' + ${dept.id}" style="display: inline; cursor: pointer;">
+                <strong th:text="${dept.id}"></strong> - <span th:text="${dept.name}"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button onclick="deleteDepartment()">Supprimer</button>
+        <a href="/dashboard" class="btn-cancel">Annuler</a>
+    </div>
+
+    <script>
+        function deleteDepartment() {
+            const selected = document.querySelector('input[name="deptId"]:checked');
+            if (!selected) {
+                alert('Veuillez sélectionner un département');
+                return;
+            }
+            if (confirm('Êtes-vous VRAIMENT sûr ? Cette action est irréversible.')) {
+                window.location.href = `/department/remove/${selected.value}`;
+            }
+        }
+    </script>
+</div>
+</body>
+</html>

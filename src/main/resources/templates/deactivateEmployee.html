@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Désactiver un employé</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #2a5298;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.85rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        button, a {
+            padding: 0.85rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            text-align: center;
+        }
+
+        button {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-cancel {
+            background: #95a5a6;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .btn-cancel:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .info-text {
+            background: #f0f4f8;
+            border-left: 4px solid #2a5298;
+            padding: 1rem;
+            border-radius: 4px;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Désactiver un employé</h2>
+    
+    <div class="form-group">
+        <label for="employeeId">ID de l'employé à désactiver :</label>
+        <input 
+            type="number" 
+            id="employeeId" 
+            placeholder="Entrez l'ID de l'employé"
+            min="1"
+        >
+    </div>
+
+    <div class="button-group">
+        <button onclick="deactivateEmployee()">Désactiver</button>
+        <a href="/dashboard" class="btn-cancel">Annuler</a>
+    </div>
+
+    <script>
+        function deactivateEmployee() {
+            const id = document.getElementById('employeeId').value;
+            if (!id) {
+                alert('Veuillez entrer un ID valide');
+                return;
+            }
+            if (confirm('Êtes-vous sûr de vouloir désactiver cet employé ?')) {
+                window.location.href = `/employee/deactivate/${id}`;
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
