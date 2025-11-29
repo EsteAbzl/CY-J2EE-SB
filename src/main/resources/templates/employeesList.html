@@ -5,73 +5,108 @@
     <title>Liste des employés</title>
     <style>
         body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
-        h2 { text-align:center; color:#fff; margin-bottom:1rem; }
-        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        h2 { text-align:center; color:#fff; margin-bottom:2rem; }
+        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); margin-bottom:2rem; }
         th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
         th { background:#2a5298; color:#fff; }
         tr:nth-child(even) { background:#f9f9f9; }
-        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
-        .btn:hover { background:#1e3c72; cursor: pointer; }
+        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; border:none; cursor:pointer; font-size:0.9rem; }
+        .btn:hover { background:#1e3c72; }
         .btn-danger { background:#c0392b; }
         .btn-danger:hover { background:#962d22; }
-        .actions { text-align:center; margin-top:1rem; }
-        .search-bar { display: flex; justify-content: center; margin: 20px; }
-        .search-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px 0 0 8px; width: 250px; }
-        .search-bar button { padding: 0.5rem 1rem; border: none; background: #2a5298; color: white; border-radius: 0 8px 8px 0; cursor: pointer; }
-        .search-bar button:hover { background: #1e3c72; }
-        .filters { display: flex; justify-content: center; gap: 10px; margin: 20px; flex-wrap: wrap; }
-        .filters select { padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px; }
+        .btn-danger:disabled { background:#ccc; cursor:not-allowed; opacity:0.6; }
+        .btn-danger-disabled { background:#ccc; cursor:not-allowed; opacity:0.6; pointer-events:none; }
+        .btn-edit { background:#f39c12; }
+        .btn-edit:hover { background:#d68910; }
+        .btn-payslip { background:#27ae60; }
+        .btn-payslip:hover { background:#1e8449; }
+        .btn-extra { background:#8e44ad; }
+        .btn-extra:hover { background:#6c3483; }
+        .actions { text-align:center; margin-top:2rem; }
+        
+        .search-filters-container { background:#fff; border-radius:15px; padding:2.5rem; margin-bottom:2rem; box-shadow:0 8px 25px rgba(0,0,0,0.2); border-left:5px solid #2a5298; }
+        .search-filters-title { color:#2a5298; font-size:1.5rem; font-weight:bold; margin-bottom:2rem; text-align:center; text-transform:uppercase; letter-spacing:1px; }
+        .search-section { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; margin-bottom:2rem; }
+        .search-section input, .search-section select { padding:1rem; border:2px solid #e0e0e0; border-radius:10px; font-size:1rem; transition:all 0.3s ease; background-color:#fafafa; }
+        .search-section input::placeholder { color:#999; }
+        .search-section input:focus, .search-section select:focus { outline:none; border-color:#2a5298; background-color:#fff; box-shadow:0 0 8px rgba(42, 82, 152, 0.2); }
+        
+        .button-section { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem; }
+        .search-btn, .reset-btn { padding:1rem 2.5rem; border:none; color:white; border-radius:10px; cursor:pointer; font-weight:bold; font-size:1rem; white-space:nowrap; transition:all 0.3s; box-shadow:0 4px 12px rgba(0,0,0,0.15); text-transform:uppercase; letter-spacing:0.5px; }
+        .search-btn { background:linear-gradient(135deg, #2a5298, #1e3c72); }
+        .search-btn:hover { background:linear-gradient(135deg, #1e3c72, #152c4f); transform:translateY(-3px); box-shadow:0 8px 16px rgba(0,0,0,0.25); }
+        .reset-btn { background:linear-gradient(135deg, #95a5a6, #7f8c8d); }
+        .reset-btn:hover { background:linear-gradient(135deg, #7f8c8d, #6b7778); transform:translateY(-3px); box-shadow:0 8px 16px rgba(0,0,0,0.25); }
     </style>
 </head>
 <body>
 <h2>Liste des employés</h2>
-<div>
-    <form action="/employee/list" method="get" class="search-bar">
-        <input type="text" name="query" placeholder="Nom, prénom ou matricule">
-        <button type="submit">🔍 Rechercher</button>
+
+<div class="search-filters-container">
+    <div class="search-filters-title">Rechercher et Filtrer</div>
+    
+    <form action="/employee/list" method="get" id="searchForm">
+        <div class="search-section">
+            <input type="text" name="query" placeholder="Nom, prénom ou matricule" th:value="${searchQuery}">
+            
+            <select name="grade">
+                <option value="">-- Grade --</option>
+                <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}" th:selected="${grade == selectedGrade}"></option>
+            </select>
+
+            <select name="position">
+                <option value="">-- Poste --</option>
+                <option th:each="position : ${positions}" th:value="${position}" th:text="${position}" th:selected="${position == selectedPosition}"></option>
+            </select>
+
+            <select name="department">
+                <option value="">-- Département --</option>
+                <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}" th:selected="${dept.id == selectedDepartment}"></option>
+            </select>
+        </div>
+        
+        <div class="button-section">
+            <button type="submit" class="search-btn">🔍 Rechercher</button>
+            <button type="button" class="reset-btn" onclick="resetAndReload()">↺ Initialiser</button>
+        </div>
     </form>
 </div>
-<form action="/employee/list" method="get" class="filters" id="filters">
-    <select name="grade">
-        <option value="">-- Grade --</option>
-        <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}"></option>
-    </select>
 
-    <select name="position">
-        <option value="">-- Poste --</option>
-        <option th:each="position : ${positions}" th:value="${position}" th:text="${position}"></option>
-    </select>
-
-    <select name="department">
-        <option value="">-- Département --</option>
-        <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}"></option>
-    </select>
-
-    <button type="submit" class="btn">Appliquer</button>
-</form>
+<script>
+    function resetAndReload() {
+        // Vider tous les champs
+        document.getElementById('searchForm').reset();
+        // Rediriger vers /employee/list sans paramètres pour afficher tous les employés
+        window.location.href = '/employee/list';
+    }
+</script>
 
 <table>
     <tr>
         <th>ID</th>
+        <th>Arrivée</th>
         <th>Nom</th>
         <th>Email</th>
+        <th>Département</th>
         <th>Grade</th>
         <th>Poste</th>
-        <th>ID Département</th>
         <th>Actions</th>
     </tr>
     <tr th:each="emp : ${employees}">
         <td th:text="${emp.id}"></td>
-        <td th:text="${emp.firstName + ' ' + emp.lastName}"></td>
+        <td th:text="${firstSalaries.get(emp.id) != null ? firstSalaries.get(emp.id) : '--'}"></td>
+        <td th:text="${emp.lastName + ' ' + emp.firstName}"></td>
         <td th:text="${emp.email}"></td>
+        <td th:text="${departmentNames.get(emp.departmentId) != null ? departmentNames.get(emp.departmentId) : '--'}"></td>
         <td th:text="${emp.grade}"></td>
         <td th:text="${emp.positionTitle}"></td>
-        <td th:text="${emp.departmentId}"></td>
         <td>
-            <a th:href="'/employee/' + ${emp.id}" class="btn">Voir</a>
-            <a th:href="'/employee/' + ${emp.id} + '/edit'" class="btn">Éditer</a>
+            <a th:href="'/employee/' + ${emp.id} + '/edit'" class="btn btn-edit">✏️ Modifier</a>
+            <a th:href="'/payslip/create/form?employeeId=' + ${emp.id}" class="btn">📄 Générer fiche</a>
+            <a href="/payslip/list" class="btn btn-payslip">👓 Fiches de paie</a>
+            <a href="/salaire/list" class="btn btn-extra">💰 Ajout extra</a>
             <form th:action="'/employee/' + ${emp.id} + '/delete'" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir désactiver cet employé ?')">🗑️ Supprimer</button>
             </form>
         </td>
     </tr>

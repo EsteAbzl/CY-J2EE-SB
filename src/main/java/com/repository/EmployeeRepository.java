@@ -22,7 +22,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     List<String> findDistinctPositions();
     
     @Query("SELECT e FROM Employee e WHERE " +
-           "(:query IS NULL OR e.firstName LIKE %:query% OR e.lastName LIKE %:query% OR e.email LIKE %:query%) AND " +
+           "(:query IS NULL OR e.firstName LIKE %:query% OR e.lastName LIKE %:query% OR e.email LIKE %:query% OR CONCAT(e.firstName, ' ', e.lastName) LIKE %:query% OR CONCAT(e.lastName, ' ', e.firstName) LIKE %:query%) AND " +
            "(:grade IS NULL OR e.grade = :grade) AND " +
            "(:position IS NULL OR e.positionTitle = :position) AND " +
            "(:departmentId IS NULL OR e.departmentId = :departmentId) " +

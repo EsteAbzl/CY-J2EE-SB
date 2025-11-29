@@ -5,48 +5,98 @@
     <title>Liste des bulletins de paie</title>
     <style>
         body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
-        h2 { text-align:center; color:#fff; margin-bottom:1rem; }
-        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        h2 { text-align:center; color:#fff; margin-bottom:2rem; }
+        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); margin-bottom:2rem; }
         th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
         th { background:#2a5298; color:#fff; }
         tr:nth-child(even) { background:#f9f9f9; }
-        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
-        .btn:hover { background:#1e3c72; cursor: pointer; }
-        .actions { text-align:center; margin-top:1rem; }
+        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; border:none; cursor:pointer; }
+        .btn:hover { background:#1e3c72; }
+        .actions { text-align:center; margin-top:2rem; }
+        
+        .search-filters-container { background:#fff; border-radius:15px; padding:2.5rem; margin-bottom:2rem; box-shadow:0 8px 25px rgba(0,0,0,0.2); border-left:5px solid #2a5298; }
+        .search-filters-title { color:#2a5298; font-size:1.5rem; font-weight:bold; margin-bottom:2rem; text-align:center; text-transform:uppercase; letter-spacing:1px; }
+        .search-section { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; margin-bottom:2rem; }
+        .search-section input, .search-section select { padding:1rem; border:2px solid #e0e0e0; border-radius:10px; font-size:1rem; transition:all 0.3s ease; background-color:#fafafa; }
+        .search-section input::placeholder { color:#999; }
+        .search-section input:focus, .search-section select:focus { outline:none; border-color:#2a5298; background-color:#fff; box-shadow:0 0 8px rgba(42, 82, 152, 0.2); }
+        
+        .button-section { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem; }
+        .search-btn, .reset-btn { padding:1rem 2.5rem; border:none; color:white; border-radius:10px; cursor:pointer; font-weight:bold; font-size:1rem; white-space:nowrap; transition:all 0.3s; box-shadow:0 4px 12px rgba(0,0,0,0.15); text-transform:uppercase; letter-spacing:0.5px; }
+        .search-btn { background:linear-gradient(135deg, #2a5298, #1e3c72); }
+        .search-btn:hover { background:linear-gradient(135deg, #1e3c72, #152c4f); transform:translateY(-3px); box-shadow:0 8px 16px rgba(0,0,0,0.25); }
+        .reset-btn { background:linear-gradient(135deg, #95a5a6, #7f8c8d); }
+        .reset-btn:hover { background:linear-gradient(135deg, #7f8c8d, #6b7778); transform:translateY(-3px); box-shadow:0 8px 16px rgba(0,0,0,0.25); }
     </style>
 </head>
 <body>
 <h2>Liste des bulletins de paie</h2>
+
+<div class="search-filters-container">
+    <div class="search-filters-title">Rechercher et Filtrer</div>
+    
+    <form action="/payslip/list" method="get" id="searchForm">
+        <div class="search-section">
+            <input type="text" name="query" placeholder="Nom, prénom ou email" th:value="${searchQuery != null ? searchQuery : ''}">
+            
+            <input type="number" name="year" placeholder="Année (YYYY)" min="2000" max="2099" th:value="${selectedYear != null ? selectedYear : ''}">
+
+            <select name="month">
+                <option value="">-- Mois --</option>
+                <option value="1" th:selected="${selectedMonth == 1}">1</option>
+                <option value="2" th:selected="${selectedMonth == 2}">2</option>
+                <option value="3" th:selected="${selectedMonth == 3}">3</option>
+                <option value="4" th:selected="${selectedMonth == 4}">4</option>
+                <option value="5" th:selected="${selectedMonth == 5}">5</option>
+                <option value="6" th:selected="${selectedMonth == 6}">6</option>
+                <option value="7" th:selected="${selectedMonth == 7}">7</option>
+                <option value="8" th:selected="${selectedMonth == 8}">8</option>
+                <option value="9" th:selected="${selectedMonth == 9}">9</option>
+                <option value="10" th:selected="${selectedMonth == 10}">10</option>
+                <option value="11" th:selected="${selectedMonth == 11}">11</option>
+                <option value="12" th:selected="${selectedMonth == 12}">12</option>
+            </select>
+        </div>
+        
+        <div class="button-section">
+            <button type="submit" class="search-btn">🔍 Rechercher</button>
+            <button type="button" class="reset-btn" onclick="resetAndReload()">↺ Initialiser</button>
+        </div>
+    </form>
+</div>
+
 <table>
     <tr>
-        <th>ID</th>
+        <th>ID Fiche</th>
         <th>ID Employé</th>
+        <th>Nom</th>
         <th>Année</th>
         <th>Mois</th>
-        <th>Salaire de base</th>
-        <th>Bonus</th>
-        <th>Déductions</th>
-        <th>Salaire net</th>
+        <th>Généré le</th>
         <th>Actions</th>
     </tr>
     <tr th:each="payslip : ${payslips}">
         <td th:text="${payslip.id}"></td>
         <td th:text="${payslip.employeeId}"></td>
+        <td th:text="${payslip.employeeName}"></td>
         <td th:text="${payslip.periodYear}"></td>
         <td th:text="${payslip.periodMonth}"></td>
-        <td th:text="${payslip.baseSalary}"></td>
-        <td th:text="${payslip.bonuses}"></td>
-        <td th:text="${payslip.deductions}"></td>
-        <td th:text="${payslip.netPay}"></td>
+        <td th:text="${#dates.format(payslip.generatedAt, 'dd/MM/yyyy HH:mm')}"></td>
         <td>
-            <a th:href="'/payslip/' + ${payslip.id} + '/print'" class="btn">Imprimer</a>
+            <a th:href="'/payslip/' + ${payslip.id} + '/view'" class="btn">Consulter</a>
         </td>
     </tr>
 </table>
 
 <div class="actions">
-    <a href="/payslip/create/form" class="btn">Créer un bulletin</a>
-    <a href="/dashboard.jsp" class="btn">Retour au tableau de bord</a>
+    <a href="/dashboard" class="btn">Retour au tableau de bord</a>
 </div>
+
+<script>
+    function resetAndReload() {
+        document.getElementById('searchForm').reset();
+        window.location.href = '/payslip/list';
+    }
+</script>
 </body>
 </html>

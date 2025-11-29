@@ -9,23 +9,35 @@
         form { background:#fff; border-radius:12px; padding:2rem; max-width:600px; margin:auto; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
         label { display:block; margin-top:1rem; font-weight:bold; color:#2a5298; }
         input, select, textarea { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; margin-top:.25rem; box-sizing: border-box; }
-        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; margin-top:1rem; cursor:pointer; width:100%; }
-        .btn:hover { background:#1e3c72; }
+        
+        #email { cursor:not-allowed; background-color:#f0f0f0; }
+        
+        .date-group { display:flex; gap:0.5rem; margin-top:.25rem; }
+        .date-group select { flex:1; }
+        
+        .button-group { display:flex; gap:1rem; margin-top:1.5rem; }
+        .button-group .btn { flex:1; margin:0; }
+        
+        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; cursor:pointer; text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center; }
+        .btn:hover { background:#1e3c72; text-decoration:none; }
         .btn-cancel { background:#95a5a6; }
-        .btn-cancel:hover { background:#7f8c8d; }
+        .btn-cancel:hover { background:#7f8c8d; text-decoration:none; }
+        
+        #emailPreview { color:#666; font-size:0.9rem; margin-top:.25rem; font-style:italic; }
     </style>
 </head>
 <body>
 <h2>Ajouter un employé</h2>
 <form action="/employee/EmployeeCreateServlet" method="post">
     <label>Prénom</label>
-    <input type="text" name="first_name" required>
+    <input type="text" name="first_name" id="firstName" required>
 
     <label>Nom</label>
-    <input type="text" name="last_name" required>
+    <input type="text" name="last_name" id="lastName" required>
 
     <label>Email</label>
-    <input type="email" name="email" required>
+    <input type="email" name="email" id="email" readonly>
+    <div id="emailPreview">prénom.nom&lt;id&gt;@entreprise.com</div>
 
     <label>Grade</label>
     <input type="text" name="grade">
@@ -42,15 +54,26 @@
         <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}"></option>
     </select>
 
-    <label>Date d'embauche</label>
-    <div>
+    <label>Date d'embauche (jour/mois/année)</label>
+    <div class="date-group">
         <select name="hire_day">
             <option value="">Jour</option>
             <option th:each="day : ${#numbers.sequence(1, 31)}" th:value="${day}" th:text="${day}"></option>
         </select>
         <select name="hire_month">
             <option value="">Mois</option>
-            <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"></option>
+            <option value="1">Janvier</option>
+            <option value="2">Février</option>
+            <option value="3">Mars</option>
+            <option value="4">Avril</option>
+            <option value="5">Mai</option>
+            <option value="6">Juin</option>
+            <option value="7">Juillet</option>
+            <option value="8">Août</option>
+            <option value="9">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
         </select>
         <select name="hire_year">
             <option value="">Année</option>
@@ -58,8 +81,46 @@
         </select>
     </div>
 
-    <button class="btn" type="submit">Créer l'employé</button>
-    <a href="/employee/list" class="btn btn-cancel">Annuler</a>
+    <div class="button-group">
+        <a href="/dashboard" class="btn btn-cancel">Annuler</a>
+        <button class="btn" type="submit">Créer l'employé</button>
+    </div>
 </form>
+
+<script>
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const emailInput = document.getElementById('email');
+    const emailPreview = document.getElementById('emailPreview');
+
+    function generateEmail() {
+        const firstName = firstNameInput.value.trim().toLowerCase();
+        const lastName = lastNameInput.value.trim().toLowerCase();
+        
+        if (firstName && lastName) {
+            // Fetch the next employee ID from the server
+            fetch('/employee/getNextId')
+                .then(response => response.json())
+                .then(data => {
+                    const nextId = data.nextId;
+                    const generatedEmail = firstName + '.' + lastName + nextId + '@entreprise.com';
+                    emailInput.value = generatedEmail;
+                    emailPreview.textContent = firstName + '.' + lastName + '<' + nextId + '>@entreprise.com';
+                })
+                .catch(() => {
+                    // Fallback if server request fails
+                    const generatedEmail = firstName + '.' + lastName + '@entreprise.com';
+                    emailInput.value = generatedEmail;
+                    emailPreview.textContent = firstName + '.' + lastName + '<id>@entreprise.com';
+                });
+        } else {
+            emailInput.value = '';
+            emailPreview.textContent = 'prénom.nom<id>@entreprise.com';
+        }
+    }
+
+    firstNameInput.addEventListener('input', generateEmail);
+    lastNameInput.addEventListener('input', generateEmail);
+</script>
 </body>
 </html>

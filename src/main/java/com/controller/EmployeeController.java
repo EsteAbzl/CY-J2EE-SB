@@ -2,15 +2,19 @@ package com.controller;
 
 import com.model.Employee;
 import com.model.Department;
+import com.model.Salaire;
 import com.repository.EmployeeRepository;
 import com.repository.DepartmentRepository;
+import com.repository.SalaireRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -23,6 +27,9 @@ public class EmployeeController {
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    @Autowired
+    private SalaireRepository salaireRepository;
+
     @GetMapping("/list")
     public String listEmployees(
             @RequestParam(required = false) String query,
@@ -33,8 +40,19 @@ public class EmployeeController {
 
         List<Employee> employees;
         
-        if (query != null || grade != null || position != null || department != null) {
-            employees = employeeRepository.search(query, grade, position, department);
+        // Vérifier si au moins un filtre est défini et non-vide
+        boolean hasFilters = (query != null && !query.trim().isEmpty()) || 
+                           (grade != null && !grade.trim().isEmpty()) || 
+                           (position != null && !position.trim().isEmpty()) || 
+                           department != null;
+        
+        if (hasFilters) {
+            // Convertir les chaînes vides en null pour la requête
+            String queryParam = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
+            String gradeParam = (grade != null && !grade.trim().isEmpty()) ? grade.trim() : null;
+            String positionParam = (position != null && !position.trim().isEmpty()) ? position.trim() : null;
+            
+            employees = employeeRepository.search(queryParam, gradeParam, positionParam, department);
         } else {
             employees = employeeRepository.findAll();
         }
@@ -43,12 +61,41 @@ public class EmployeeController {
         List<String> positions = employeeRepository.findDistinctPositions();
         List<Department> departments = departmentRepository.findAll();
 
+        // Créer une map pour les salaires et départements
+        Map<Integer, String> departmentNames = new HashMap<>();
+        Map<Integer, String> firstSalaries = new HashMap<>();
+        
+        for (Department dept : departments) {
+            departmentNames.put(dept.getId(), dept.getName());
+        }
+        
+        for (Employee emp : employees) {
+            List<Salaire> salaires = salaireRepository.findByEmployeeId(emp.getId());
+            if (!salaires.isEmpty()) {
+                Salaire firstSalaire = salaires.get(0);
+                firstSalaries.put(emp.getId(), firstSalaire.getDate().toString());
+            }
+        }
+
         model.addAttribute("employees", employees);
+        model.addAttribute("departmentNames", departmentNames);
+        model.addAttribute("firstSalaries", firstSalaries);
         model.addAttribute("grades", grades);
         model.addAttribute("positions", positions);
         model.addAttribute("departments", departments);
-        if (query != null) {
+        
+        // Garder les valeurs des filtres après la recherche
+        if (query != null && !query.trim().isEmpty()) {
             model.addAttribute("searchQuery", query);
+        }
+        if (grade != null && !grade.trim().isEmpty()) {
+            model.addAttribute("selectedGrade", grade);
+        }
+        if (position != null && !position.trim().isEmpty()) {
+            model.addAttribute("selectedPosition", position);
+        }
+        if (department != null) {
+            model.addAttribute("selectedDepartment", department);
         }
 
         return "employeesList";
@@ -144,6 +191,20 @@ public class EmployeeController {
         return "redirect:/employee/list";
     }
 
+    @GetMapping("/getNextId")
+    @ResponseBody
+    public Map<String, Integer> getNextId() {
+        List<Employee> employees = employeeRepository.findAll();
+        int nextId = employees.isEmpty() ? 1 : employees.stream()
+                .mapToInt(Employee::getId)
+                .max()
+                .orElse(0) + 1;
+        
+        Map<String, Integer> response = new HashMap<>();
+        response.put("nextId", nextId);
+        return response;
+    }
+
     @GetMapping("/deactivate/form")
     public String deactivateForm(Model model) {
         List<Employee> employees = employeeRepository.findAll();
@@ -153,8 +214,13 @@ public class EmployeeController {
 
     @PostMapping("/{id}/delete")
     public String deleteEmployee(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        employeeRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("message", "Employé supprimé avec succès");
+        Optional<Employee> employeeOpt = employeeRepository.findById(id);
+        if (employeeOpt.isPresent()) {
+            Employee emp = employeeOpt.get();
+            emp.setActive(false);
+            employeeRepository.save(emp);
+            redirectAttributes.addFlashAttribute("message", "Employé désactivé avec succès");
+        }
         return "redirect:/employee/list";
     }
 }

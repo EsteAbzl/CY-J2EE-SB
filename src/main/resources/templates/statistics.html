@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiques des Employés</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 2rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .section h2 {
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 1rem;
+            margin-top: 0;
+        }
+        .section-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #2a5298;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .btn {
+            display: inline-block;
+            background: #2a5298;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #1e3c72;
+        }
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 2rem;
+            font-style: italic;
+        }
+        .pie-chart-wrapper {
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (max-width: 1024px) {
+            .section-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>📊 Statistiques des Employés</h1>
+
+<div class="container">
+    <!-- Section 1: Employés par Département -->
+    <div class="section">
+        <h2>👥 Employés par Département</h2>
+        <div class="section-content">
+            <div class="table-wrapper">
+                <table th:if="${employeesByDept.size() > 0}">
+                    <tr>
+                        <th>Département</th>
+                        <th>Nombre d'employés</th>
+                    </tr>
+                    <tr th:each="entry : ${employeesByDept.entrySet()}">
+                        <td th:text="${entry.key}"></td>
+                        <td th:text="${entry.value}"></td>
+                    </tr>
+                </table>
+                <div th:if="${employeesByDept.size() == 0}" class="empty-message">
+                    Aucune donnée disponible
+                </div>
+            </div>
+            <div class="chart-wrapper" th:if="${employeesByDept.size() > 0}">
+                <canvas id="deptChart" 
+                    th:data-labels="${deptLabels}" 
+                    th:data-data="${deptData}"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Employés par Projet -->
+    <div class="section">
+        <h2>🚀 Employés par Projet</h2>
+        <div class="section-content">
+            <div class="table-wrapper">
+                <table th:if="${employeesByProject.size() > 0}">
+                    <tr>
+                        <th>Projet</th>
+                        <th>Nombre d'employés</th>
+                    </tr>
+                    <tr th:each="entry : ${employeesByProject.entrySet()}">
+                        <td th:text="${entry.key}"></td>
+                        <td th:text="${entry.value}"></td>
+                    </tr>
+                </table>
+                <div th:if="${employeesByProject.size() == 0}" class="empty-message">
+                    Aucun projet avec des employés assignés
+                </div>
+            </div>
+            <div class="chart-wrapper" th:if="${employeesByProject.size() > 0}">
+                <canvas id="projectChart" 
+                    th:data-labels="${projectLabels}" 
+                    th:data-data="${projectData}"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Employés par Grade -->
+    <div class="section">
+        <h2>🎓 Employés par Grade</h2>
+        <div class="section-content">
+            <div class="table-wrapper">
+                <table th:if="${employeesByGrade.size() > 0}">
+                    <tr>
+                        <th>Grade</th>
+                        <th>Nombre d'employés</th>
+                    </tr>
+                    <tr th:each="entry : ${employeesByGrade.entrySet()}">
+                        <td th:text="${entry.key}"></td>
+                        <td th:text="${entry.value}"></td>
+                    </tr>
+                </table>
+                <div th:if="${employeesByGrade.size() == 0}" class="empty-message">
+                    Aucune donnée disponible
+                </div>
+            </div>
+            <div class="pie-chart-wrapper" th:if="${employeesByGrade.size() > 0}">
+                <canvas id="gradeChart" 
+                    th:data-labels="${gradeLabels}" 
+                    th:data-data="${gradeData}"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retour -->
+    <div class="actions">
+        <a href="/dashboard" class="btn">← Retour au tableau de bord</a>
+    </div>
+</div>
+
+<script>
+    // Couleurs pour les charts
+    const chartColors = [
+        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+        '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#FF6384'
+    ];
+
+    // Helper function to parse Thymeleaf list
+    function parseList(str) {
+        if (!str) return [];
+        return str.replace(/^\[/, '').replace(/\]$/, '').split(',').map(s => s.trim());
+    }
+
+    // Chart 1: Employés par Département (Bar Chart)
+    const deptCanvas = document.getElementById('deptChart');
+    if (deptCanvas) {
+        const labels = parseList(deptCanvas.getAttribute('data-labels'));
+        const data = parseList(deptCanvas.getAttribute('data-data')).map(Number);
+        const deptCtx = deptCanvas.getContext('2d');
+        new Chart(deptCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre d\'employés',
+                    data: data,
+                    backgroundColor: chartColors.slice(0, data.length),
+                    borderColor: '#2a5298',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 2: Employés par Projet (Bar Chart)
+    const projectCanvas = document.getElementById('projectChart');
+    if (projectCanvas) {
+        const labels = parseList(projectCanvas.getAttribute('data-labels'));
+        const data = parseList(projectCanvas.getAttribute('data-data')).map(Number);
+        const projectCtx = projectCanvas.getContext('2d');
+        new Chart(projectCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre d\'employés',
+                    data: data,
+                    backgroundColor: chartColors.slice(0, data.length),
+                    borderColor: '#2a5298',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 3: Employés par Grade (Pie Chart)
+    const gradeCanvas = document.getElementById('gradeChart');
+    if (gradeCanvas) {
+        const labels = parseList(gradeCanvas.getAttribute('data-labels'));
+        const data = parseList(gradeCanvas.getAttribute('data-data')).map(Number);
+        const gradeCtx = gradeCanvas.getContext('2d');
+        new Chart(gradeCtx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: chartColors.slice(0, data.length),
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

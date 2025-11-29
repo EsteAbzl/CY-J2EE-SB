@@ -9,41 +9,90 @@
         form { background:#fff; border-radius:12px; padding:2rem; max-width:600px; margin:auto; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
         label { display:block; margin-top:1rem; font-weight:bold; color:#2a5298; }
         input, select { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; margin-top:.25rem; box-sizing: border-box; }
-        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; margin-top:1rem; cursor:pointer; width:100%; }
-        .btn:hover { background:#1e3c72; }
+        
+        .button-group { display:flex; gap:1rem; margin-top:1.5rem; }
+        .button-group .btn { flex:1; margin:0; }
+        
+        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; cursor:pointer; text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center; }
+        .btn:hover { background:#1e3c72; text-decoration:none; }
         .btn-cancel { background:#95a5a6; }
-        .btn-cancel:hover { background:#7f8c8d; }
+        .btn-cancel:hover { background:#7f8c8d; text-decoration:none; }
+        
+        .alert { padding:1rem; margin:1rem 0; border-radius:8px; }
+        .alert-danger { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+        .alert-info { background:#d1ecf1; color:#0c5460; border:1px solid #bee5eb; }
     </style>
+    <script>
+        function loadPayslipData() {
+            const employeeId = document.getElementById('employeeId').value;
+            const dateInput = document.getElementById('bulletinDate').value;
+            
+            if (!employeeId || !dateInput) {
+                clearFields();
+                return;
+            }
+            
+            // Extraire l'année et le mois de la date
+            const [year, month, day] = dateInput.split('-');
+            
+            fetch(`/payslip/api/data?employeeId=${employeeId}&year=${year}&month=${month}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('baseSalary').value = data.baseSalary.toFixed(2);
+                        document.getElementById('bonuses').value = data.bonuses.toFixed(2);
+                        document.getElementById('deductions').value = data.deductions.toFixed(2);
+                        document.getElementById('netPay').value = data.netPay.toFixed(2);
+                        document.getElementById('periodYear').value = year;
+                        document.getElementById('periodMonth').value = month;
+                        document.getElementById('errorMessage').style.display = 'none';
+                    } else {
+                        showError(data.message);
+                        clearFields();
+                    }
+                })
+                .catch(error => {
+                    showError('Erreur lors du chargement des données');
+                    clearFields();
+                });
+        }
+        
+        function clearFields() {
+            document.getElementById('baseSalary').value = '0';
+            document.getElementById('bonuses').value = '0';
+            document.getElementById('deductions').value = '0';
+            document.getElementById('netPay').value = '0';
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
 </head>
 <body>
 <h2>Créer un bulletin de paie</h2>
 <form action="/payslip/PayslipCreateServlet" method="post">
-    <label>Employé</label>
-    <select name="employeeId" required>
-        <option value="">-- Sélectionner un employé --</option>
-        <option th:each="emp : ${employees}" th:value="${emp.id}" th:text="${emp.firstName + ' ' + emp.lastName}"></option>
-    </select>
+    <div id="errorMessage" class="alert alert-danger" style="display:none;"></div>
+    
+    <input type="hidden" id="employeeId" name="employeeId" th:value="${selectedEmployeeId}" required>
 
-    <label>Année</label>
-    <input type="number" name="periodYear" required>
+    <label>Date du bulletin (mois/année)</label>
+    <input type="date" id="bulletinDate" required onchange="loadPayslipData()">
 
-    <label>Mois</label>
-    <input type="number" name="periodMonth" min="1" max="12" required>
+    <!-- Champs cachés pour les données calculées -->
+    <input type="hidden" id="periodYear" name="periodYear" value="0">
+    <input type="hidden" id="periodMonth" name="periodMonth" value="0">
+    <input type="hidden" id="baseSalary" name="baseSalary" value="0">
+    <input type="hidden" id="bonuses" name="bonuses" value="0">
+    <input type="hidden" id="deductions" name="deductions" value="0">
+    <input type="hidden" id="netPay" name="netPay" value="0">
 
-    <label>Salaire de base</label>
-    <input type="number" name="baseSalary" step="0.01" required>
-
-    <label>Bonus</label>
-    <input type="number" name="bonuses" step="0.01" value="0">
-
-    <label>Déductions</label>
-    <input type="number" name="deductions" step="0.01" value="0">
-
-    <label>Salaire net</label>
-    <input type="number" name="netPay" step="0.01" required>
-
-    <button class="btn" type="submit">Créer le bulletin</button>
-    <a href="/payslip/list" class="btn btn-cancel">Annuler</a>
+    <div class="button-group">
+        <a href="/employee/list" class="btn btn-cancel">Annuler</a>
+        <button class="btn" type="submit">Créer le bulletin</button>
+    </div>
 </form>
 </body>
 </html>
