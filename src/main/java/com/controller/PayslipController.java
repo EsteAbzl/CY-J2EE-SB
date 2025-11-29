@@ -43,22 +43,40 @@ public class PayslipController {
     @GetMapping("/list")
     public String listPayslips(
             @RequestParam(required = false) String query,
+            @RequestParam(required = false) Integer employeeId,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
             Model model) {
         
         List<Payslip> payslips = payslipRepository.findAll();
         
-        // Appliquer les filtres
+        // Filtrer par ID d'employé si fourni
+        if (employeeId != null && employeeId > 0) {
+            payslips = payslips.stream()
+                    .filter(p -> p.getEmployeeId() == employeeId)
+                    .collect(Collectors.toList());
+        }
+        
+        // Appliquer les filtres de recherche par nom/prénom/email/ID
         if (query != null && !query.trim().isEmpty()) {
             String searchQuery = query.trim().toLowerCase();
             payslips = payslips.stream()
                     .filter(p -> {
+                        // Chercher par ID d'employé (numérique)
+                        try {
+                            int searchId = Integer.parseInt(searchQuery);
+                            if (p.getEmployeeId() == searchId) {
+                                return true;
+                            }
+                        } catch (NumberFormatException e) {
+                            // N'est pas un nombre, chercher par nom/prénom
+                        }
+                        
                         Optional<Employee> emp = employeeRepository.findById(p.getEmployeeId());
                         if (emp.isPresent()) {
                             Employee e = emp.get();
                             String fullName = (e.getLastName() + " " + e.getFirstName()).toLowerCase();
-                            return fullName.contains(searchQuery) || e.getEmail().toLowerCase().contains(searchQuery);
+                            return fullName.contains(searchQuery);
                         }
                         return false;
                     })
@@ -92,6 +110,7 @@ public class PayslipController {
         
         model.addAttribute("payslips", payslipDTOs);
         model.addAttribute("searchQuery", query);
+        model.addAttribute("selectedEmployeeId", employeeId);
         model.addAttribute("selectedYear", year);
         model.addAttribute("selectedMonth", month);
         

@@ -37,7 +37,7 @@
     
     <form action="/payslip/list" method="get" id="searchForm">
         <div class="search-section">
-            <input type="text" name="query" placeholder="Nom, prénom ou email" th:value="${searchQuery != null ? searchQuery : ''}">
+            <input type="text" name="query" placeholder="Nom, prénom ou ID employé" th:value="${searchQuery != null ? searchQuery : ''}">
             
             <input type="number" name="year" placeholder="Année (YYYY)" min="2000" max="2099" th:value="${selectedYear != null ? selectedYear : ''}">
 

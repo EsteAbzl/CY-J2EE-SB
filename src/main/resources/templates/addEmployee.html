@@ -37,7 +37,7 @@
 
     <label>Email</label>
     <input type="email" name="email" id="email" readonly>
-    <div id="emailPreview">prénom.nom&lt;id&gt;@entreprise.com</div>
+    <div id="emailPreview">prénom.nom&lt;id&gt;@company.com</div>
 
     <label>Grade</label>
     <input type="text" name="grade">
@@ -56,26 +56,26 @@
 
     <label>Date d'embauche (jour/mois/année)</label>
     <div class="date-group">
-        <select name="hire_day">
+        <select name="hire_day" required>
             <option value="">Jour</option>
             <option th:each="day : ${#numbers.sequence(1, 31)}" th:value="${day}" th:text="${day}"></option>
         </select>
-        <select name="hire_month">
+        <select name="hire_month" required>
             <option value="">Mois</option>
-            <option value="1">Janvier</option>
-            <option value="2">Février</option>
-            <option value="3">Mars</option>
-            <option value="4">Avril</option>
-            <option value="5">Mai</option>
-            <option value="6">Juin</option>
-            <option value="7">Juillet</option>
-            <option value="8">Août</option>
-            <option value="9">Septembre</option>
-            <option value="10">Octobre</option>
-            <option value="11">Novembre</option>
-            <option value="12">Décembre</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
         </select>
-        <select name="hire_year">
+        <select name="hire_year" required>
             <option value="">Année</option>
             <option th:each="year : ${#numbers.sequence(2020, 2030)}" th:value="${year}" th:text="${year}"></option>
         </select>
@@ -103,19 +103,19 @@
                 .then(response => response.json())
                 .then(data => {
                     const nextId = data.nextId;
-                    const generatedEmail = firstName + '.' + lastName + nextId + '@entreprise.com';
+                    const generatedEmail = firstName + '.' + lastName + nextId + '@company.com';
                     emailInput.value = generatedEmail;
-                    emailPreview.textContent = firstName + '.' + lastName + '<' + nextId + '>@entreprise.com';
+                    emailPreview.textContent = firstName + '.' + lastName + '<' + nextId + '>@company.com';
                 })
                 .catch(() => {
                     // Fallback if server request fails
-                    const generatedEmail = firstName + '.' + lastName + '@entreprise.com';
+                    const generatedEmail = firstName + '.' + lastName + '@company.com';
                     emailInput.value = generatedEmail;
-                    emailPreview.textContent = firstName + '.' + lastName + '<id>@entreprise.com';
+                    emailPreview.textContent = firstName + '.' + lastName + '<id>@company.com';
                 });
         } else {
             emailInput.value = '';
-            emailPreview.textContent = 'prénom.nom<id>@entreprise.com';
+            emailPreview.textContent = 'prénom.nom<id>@company.com';
         }
     }
 

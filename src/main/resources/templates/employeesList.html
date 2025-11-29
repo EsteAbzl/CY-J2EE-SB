@@ -94,7 +94,8 @@
     </tr>
     <tr th:each="emp : ${employees}">
         <td th:text="${emp.id}"></td>
-        <td th:text="${firstSalaries.get(emp.id) != null ? firstSalaries.get(emp.id) : '--'}"></td>
+        <td th:if="${firstSalaries.get(emp.id) != null}" th:text="${#dates.format(firstSalaries.get(emp.id), 'dd/MM/yyyy')}"></td>
+        <td th:if="${firstSalaries.get(emp.id) == null}">--</td>
         <td th:text="${emp.lastName + ' ' + emp.firstName}"></td>
         <td th:text="${emp.email}"></td>
         <td th:text="${departmentNames.get(emp.departmentId) != null ? departmentNames.get(emp.departmentId) : '--'}"></td>
@@ -103,8 +104,8 @@
         <td>
             <a th:href="'/employee/' + ${emp.id} + '/edit'" class="btn btn-edit">✏️ Modifier</a>
             <a th:href="'/payslip/create/form?employeeId=' + ${emp.id}" class="btn">📄 Générer fiche</a>
-            <a href="/payslip/list" class="btn btn-payslip">👓 Fiches de paie</a>
-            <a href="/salaire/list" class="btn btn-extra">💰 Ajout extra</a>
+            <a th:href="'/payslip/list?employeeId=' + ${emp.id}" class="btn btn-payslip">👓 Fiches de paie</a>
+            <a th:href="'/salaire/extra/form?employeeId=' + ${emp.id}" class="btn btn-extra">💰 Ajout extra</a>
             <form th:action="'/employee/' + ${emp.id} + '/delete'" method="post" style="display:inline;">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir désactiver cet employé ?')">🗑️ Supprimer</button>
             </form>

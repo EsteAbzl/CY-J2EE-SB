@@ -51,29 +51,28 @@ public class SalaireController {
         return "redirect:/salaire/list";
     }
 
-    @GetMapping("/extra/list")
-    public String listSalaireExtra(Model model) {
-        List<SalaireExtra> extras = salaireExtraRepository.findAll();
-        model.addAttribute("extras", extras);
-        return "salaireExtra";
+    @GetMapping("/extra/form")
+    public String addExtraForm(@RequestParam(required = false) Integer employeeId, Model model) {
+        model.addAttribute("selectedEmployeeId", employeeId);
+        return "addSalaireExtra";
     }
 
     @PostMapping("/SalaireExtraServlet")
     public String createSalaireExtra(
             @RequestParam Integer employeeId,
             @RequestParam double montant,
-            @RequestParam String motif,
+            @RequestParam(required = false) String motif,
             @RequestParam String date,
             RedirectAttributes redirectAttributes) {
 
         SalaireExtra extra = new SalaireExtra();
         extra.setEmployeeId(employeeId);
         extra.setMontant(montant);
-        extra.setMotif(motif);
+        extra.setMotif(motif != null ? motif : "");
         extra.setDate(Date.valueOf(date));
 
         salaireExtraRepository.save(extra);
-        redirectAttributes.addFlashAttribute("message", "Salaire extra enregistré avec succès");
-        return "redirect:/salaire/extra/list";
+        redirectAttributes.addFlashAttribute("message", "Extra salarial enregistré avec succès");
+        return "redirect:/employee/list";
     }
 }

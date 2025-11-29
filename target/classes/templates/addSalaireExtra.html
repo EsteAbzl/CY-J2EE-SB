@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un extra salarial</title>
+    <style>
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; padding:2rem; min-height:100vh; margin:0; }
+        h2 { text-align:center; color:#fff; }
+        form { background:#fff; border-radius:12px; padding:2rem; max-width:600px; margin:auto; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        label { display:block; margin-top:1rem; font-weight:bold; color:#2a5298; }
+        input, select, textarea { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; margin-top:.25rem; box-sizing: border-box; }
+        textarea { resize: vertical; min-height: 80px; }
+        
+        .button-group { display:flex; gap:1rem; margin-top:1.5rem; }
+        .button-group .btn { flex:1; margin:0; }
+        
+        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; cursor:pointer; text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center; }
+        .btn:hover { background:#1e3c72; text-decoration:none; }
+        .btn-cancel { background:#95a5a6; }
+        .btn-cancel:hover { background:#7f8c8d; text-decoration:none; }
+        
+        .required { color:red; }
+    </style>
+</head>
+<body>
+<h2>Ajouter un extra salarial</h2>
+<form action="/salaire/SalaireExtraServlet" method="post">
+    <input type="hidden" name="employeeId" th:value="${selectedEmployeeId}">
+
+    <label>Date <span class="required">*</span></label>
+    <input type="date" name="date" required>
+
+    <label>Montant extra (prime ou déduction) <span class="required">*</span></label>
+    <input type="number" name="montant" step="0.01" placeholder="Positif pour prime, négatif pour déduction" required>
+
+    <label>Description (facultatif)</label>
+    <textarea name="motif" placeholder="Ex: Prime de performance, Avance sur salaire..."></textarea>
+
+    <div class="button-group">
+        <a href="/employee/list" class="btn btn-cancel">Annuler</a>
+        <button class="btn" type="submit">Ajouter l'extra</button>
+    </div>
+</form>
+</body>
+</html>

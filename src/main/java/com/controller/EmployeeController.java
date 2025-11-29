@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/employee")
@@ -56,6 +57,11 @@ public class EmployeeController {
         } else {
             employees = employeeRepository.findAll();
         }
+        
+        // Filtrer pour afficher SEULEMENT les employés actifs
+        employees = employees.stream()
+                .filter(Employee::isActive)
+                .collect(Collectors.toList());
 
         List<String> grades = employeeRepository.findDistinctGrades();
         List<String> positions = employeeRepository.findDistinctPositions();
@@ -63,7 +69,7 @@ public class EmployeeController {
 
         // Créer une map pour les salaires et départements
         Map<Integer, String> departmentNames = new HashMap<>();
-        Map<Integer, String> firstSalaries = new HashMap<>();
+        Map<Integer, java.sql.Date> firstSalaries = new HashMap<>();
         
         for (Department dept : departments) {
             departmentNames.put(dept.getId(), dept.getName());
@@ -73,7 +79,7 @@ public class EmployeeController {
             List<Salaire> salaires = salaireRepository.findByEmployeeId(emp.getId());
             if (!salaires.isEmpty()) {
                 Salaire firstSalaire = salaires.get(0);
-                firstSalaries.put(emp.getId(), firstSalaire.getDate().toString());
+                firstSalaries.put(emp.getId(), firstSalaire.getDate());
             }
         }
 
@@ -128,9 +134,9 @@ public class EmployeeController {
             @RequestParam String position_title,
             @RequestParam double base_salary,
             @RequestParam(required = false) Integer department_id,
-            @RequestParam(required = false) String hire_day,
-            @RequestParam(required = false) String hire_month,
-            @RequestParam(required = false) String hire_year,
+            @RequestParam(required = false) Integer hire_day,
+            @RequestParam(required = false) Integer hire_month,
+            @RequestParam(required = false) Integer hire_year,
             RedirectAttributes redirectAttributes) {
 
         Employee emp = new Employee();
@@ -144,6 +150,24 @@ public class EmployeeController {
         emp.setActive(true);
 
         employeeRepository.save(emp);
+
+        // Créer l'enregistrement du salaire avec la date d'embauche
+        if (hire_day != null && hire_month != null && hire_year != null && 
+            hire_day > 0 && hire_month > 0 && hire_month <= 12 && hire_year > 0) {
+            Salaire salaire = new Salaire();
+            salaire.setEmployeeId(emp.getId());
+            salaire.setSalaire(base_salary);
+            
+            // Créer la date SQL (année-mois-jour)
+            String dateString = String.format("%04d-%02d-%02d", hire_year, hire_month, hire_day);
+            try {
+                java.sql.Date hireDate = java.sql.Date.valueOf(dateString);
+                salaire.setDate(hireDate);
+                salaireRepository.save(salaire);
+            } catch (IllegalArgumentException e) {
+                // Date invalide, ignorer
+            }
+        }
 
         redirectAttributes.addFlashAttribute("message", "Employé créé avec succès");
         return "redirect:/employee/list";
@@ -220,6 +244,8 @@ public class EmployeeController {
             emp.setActive(false);
             employeeRepository.save(emp);
             redirectAttributes.addFlashAttribute("message", "Employé désactivé avec succès");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Employé non trouvé");
         }
         return "redirect:/employee/list";
     }

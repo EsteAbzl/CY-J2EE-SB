@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Membres du département</title>
+    <style>
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
+        h2, h3 { color:#fff; }
+        h2 { text-align:center; margin-bottom:1rem; }
+        .info-box { background:#fff; border-radius:12px; padding:1.5rem; margin-bottom:2rem; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        .info-box h3 { color:#2a5298; margin-top:0; }
+        table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); margin-bottom:2rem; }
+        th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
+        th { background:#2a5298; color:#fff; }
+        tr:nth-child(even) { background:#f9f9f9; }
+        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
+        .btn:hover { background:#1e3c72; }
+        .actions { text-align:center; margin-top:2rem; }
+        .no-members { text-align:center; color:#fff; font-size:1.1rem; }
+    </style>
+</head>
+<body>
+<h2>Membres du département</h2>
+
+<div class="info-box">
+    <h3 th:text="${department.name}"></h3>
+    <p th:if="${department.description}" th:text="${department.description}"></p>
+    <p th:if="!${department.description}"><em>Pas de description</em></p>
+</div>
+
+<div th:if="${employees.size() > 0}">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Grade</th>
+            <th>Poste</th>
+        </tr>
+        <tr th:each="emp : ${employees}">
+            <td th:text="${emp.id}"></td>
+            <td th:text="${emp.lastName + ' ' + emp.firstName}"></td>
+            <td th:text="${emp.email}"></td>
+            <td th:text="${emp.grade}"></td>
+            <td th:text="${emp.positionTitle}"></td>
+        </tr>
+    </table>
+</div>
+
+<div class="no-members" th:if="${employees.size() == 0}">
+    <p>Aucun employé dans ce département</p>
+</div>
+
+<div class="actions">
+    <a href="/department/list" class="btn">Retour à la liste</a>
+    <a href="/dashboard" class="btn">Retour au tableau de bord</a>
+</div>
+</body>
+</html>

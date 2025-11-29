@@ -31,7 +31,7 @@
         <td th:text="${dept.name}"></td>
         <td th:text="${dept.description}"></td>
         <td>
-            <a th:href="'/department/' + ${dept.id}" class="btn">Voir</a>
+            <a th:href="'/department/' + ${dept.id}" class="btn">Voir membres</a>
             <a th:href="'/department/' + ${dept.id} + '/edit'" class="btn">Éditer</a>
             <form th:action="'/department/' + ${dept.id} + '/delete'" method="post" style="display:inline;">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
