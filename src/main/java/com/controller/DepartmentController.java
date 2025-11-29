@@ -105,10 +105,63 @@ public class DepartmentController {
         return "deleteDepartment";
     }
 
+    @GetMapping("/remove/{ids}")
+    public String deleteMultipleDepartments(@PathVariable String ids, RedirectAttributes redirectAttributes) {
+        String[] idArray = ids.split(",");
+        int deletedCount = 0;
+        
+        for (String idStr : idArray) {
+            try {
+                Integer id = Integer.parseInt(idStr.trim());
+                Optional<Department> departmentOpt = departmentRepository.findById(id);
+                if (departmentOpt.isPresent()) {
+                    // Avant de supprimer le département, désactiver tous les employés du département
+                    List<Employee> employees = employeeRepository.findAll().stream()
+                            .filter(e -> e.getDepartmentId() != null && e.getDepartmentId().equals(id))
+                            .collect(Collectors.toList());
+                    
+                    for (Employee emp : employees) {
+                        emp.setActive(false);
+                        employeeRepository.save(emp);
+                    }
+                    
+                    // Maintenant supprimer le département
+                    departmentRepository.deleteById(id);
+                    deletedCount++;
+                }
+            } catch (NumberFormatException e) {
+                // Ignorer les IDs invalides
+            }
+        }
+        
+        if (deletedCount > 0) {
+            redirectAttributes.addFlashAttribute("message", deletedCount + " département(s) supprimé(s) avec succès (employés désactivés)");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Aucun département n'a pu être supprimé");
+        }
+        return "redirect:/department/list";
+    }
+
     @PostMapping("/{id}/delete")
     public String deleteDepartment(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        departmentRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("message", "Département supprimé avec succès");
+        Optional<Department> departmentOpt = departmentRepository.findById(id);
+        if (departmentOpt.isPresent()) {
+            // Avant de supprimer le département, désactiver tous les employés du département
+            List<Employee> employees = employeeRepository.findAll().stream()
+                    .filter(e -> e.getDepartmentId() != null && e.getDepartmentId().equals(id))
+                    .collect(Collectors.toList());
+            
+            for (Employee emp : employees) {
+                emp.setActive(false);
+                employeeRepository.save(emp);
+            }
+            
+            // Maintenant supprimer le département
+            departmentRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("message", "Département supprimé avec succès (employés désactivés)");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Département non trouvé");
+        }
         return "redirect:/department/list";
     }
 }

@@ -5,48 +5,61 @@
     <title>Liste des projets</title>
     <style>
         body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; margin:0; padding:2rem; min-height:100vh; }
-        h2 { text-align:center; color:#fff; margin-bottom:1rem; }
-        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
-        th, td { padding:.75rem; border:1px solid #ddd; text-align:left; }
+        h2 { text-align:center; color:#fff; margin-bottom:2rem; }
+        table { width:100%; border-collapse:collapse; margin:auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); margin-bottom:2rem; }
+        th, td { padding:.75rem; border:1px solid #ddd; text-align:left; font-size:0.95rem; }
         th { background:#2a5298; color:#fff; }
         tr:nth-child(even) { background:#f9f9f9; }
-        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
+        .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 0.75rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; font-size:0.85rem; }
         .btn:hover { background:#1e3c72; cursor: pointer; }
         .btn-danger { background:#c0392b; }
         .btn-danger:hover { background:#962d22; }
-        .actions { text-align:center; margin-top:1rem; }
+        .actions { text-align:center; margin-top:2rem; }
+        .no-projects { text-align:center; color:#fff; font-size:1.1rem; margin-top:2rem; background:rgba(255,255,255,0.1); padding:2rem; border-radius:12px; }
     </style>
 </head>
 <body>
 <h2>Liste des projets</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Date de début</th>
-        <th>Date de fin</th>
-        <th>ID Département</th>
-        <th>Actions</th>
-    </tr>
-    <tr th:each="project : ${projects}">
-        <td th:text="${project.id}"></td>
-        <td th:text="${project.name}"></td>
-        <td th:text="${project.description}"></td>
-        <td th:text="${project.status}"></td>
-        <td th:text="${project.startDate}"></td>
-        <td th:text="${project.endDate}"></td>
-        <td th:text="${project.departmentId}"></td>
-        <td>
-            <a th:href="'/project/' + ${project.id}" class="btn">Voir</a>
-            <a th:href="'/project/' + ${project.id} + '/edit'" class="btn">Éditer</a>
-            <form th:action="'/project/' + ${project.id} + '/delete'" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
-            </form>
-        </td>
-    </tr>
-</table>
+
+<div th:if="${projects.size() > 0}">
+    <table>
+        <tr>
+            <th>ID Projet</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Département</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="project : ${projects}">
+            <td th:text="${project.id}"></td>
+            <td th:text="${project.name}"></td>
+            <td th:text="${project.description}"></td>
+            <td th:text="${#dates.format(project.startDate, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#dates.format(project.endDate, 'dd/MM/yyyy')}"></td>
+            <td>
+                <span th:if="${project.departmentId}">
+                    <span th:each="dept : ${departments}" th:if="${dept.id == project.departmentId}" th:text="${dept.name}"></span>
+                </span>
+                <span th:unless="${project.departmentId}">-</span>
+            </td>
+            <td th:text="${project.status}"></td>
+            <td>
+                <a th:href="'/project/' + ${project.id}" class="btn">Voir</a>
+                <a th:href="'/project/' + ${project.id} + '/edit'" class="btn">Éditer</a>
+                <form th:action="'/project/' + ${project.id} + '/delete'" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="no-projects" th:if="${projects.size() == 0}">
+    <p>Il n'y a aucun projet</p>
+</div>
 
 <div class="actions">
     <a href="/project/create/form" class="btn">Ajouter un projet</a>

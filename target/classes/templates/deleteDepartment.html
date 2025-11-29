@@ -125,12 +125,12 @@
         Cette opération est irréversible.
     </div>
 
-    <label>Sélectionnez le département à supprimer :</label>
+    <label>Sélectionnez le(s) département(s) à supprimer :</label>
     <div class="dept-list">
         <div class="dept-item" th:each="dept : ${departments}">
             <input 
-                type="radio" 
-                name="deptId" 
+                type="checkbox" 
+                name="deptIds" 
                 th:value="${dept.id}" 
                 th:id="'dept' + ${dept.id}"
             >
@@ -141,19 +141,20 @@
     </div>
 
     <div class="button-group">
-        <button onclick="deleteDepartment()">Supprimer</button>
+        <button onclick="deleteDepartments()">Supprimer</button>
         <a href="/dashboard" class="btn-cancel">Annuler</a>
     </div>
 
     <script>
-        function deleteDepartment() {
-            const selected = document.querySelector('input[name="deptId"]:checked');
-            if (!selected) {
-                alert('Veuillez sélectionner un département');
+        function deleteDepartments() {
+            const selected = document.querySelectorAll('input[name="deptIds"]:checked');
+            if (selected.length === 0) {
+                alert('Veuillez sélectionner au moins un département');
                 return;
             }
+            const ids = Array.from(selected).map(cb => cb.value).join(',');
             if (confirm('Êtes-vous VRAIMENT sûr ? Cette action est irréversible.')) {
-                window.location.href = `/department/remove/${selected.value}`;
+                window.location.href = `/department/remove/${ids}`;
             }
         }
     </script>

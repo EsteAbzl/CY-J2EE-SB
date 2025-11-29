@@ -27,8 +27,41 @@ public class ProjectController {
     @GetMapping("/list")
     public String listProjects(Model model) {
         List<Project> projects = projectRepository.findAll();
+        List<Department> departments = departmentRepository.findAll();
         model.addAttribute("projects", projects);
+        model.addAttribute("departments", departments);
         return "projectsList";
+    }
+
+    @GetMapping("/create/form")
+    public String createForm(Model model) {
+        List<Department> departments = departmentRepository.findAll();
+        model.addAttribute("departments", departments);
+        model.addAttribute("project", new Project());
+        return "addProject";
+    }
+
+    @GetMapping("/delete/form")
+    public String deleteForm(Model model) {
+        List<Project> projects = projectRepository.findAll();
+        model.addAttribute("projects", projects);
+        return "deleteProject";
+    }
+
+    @GetMapping("/remove/{ids}")
+    public String deleteMultipleProjects(@PathVariable String ids, RedirectAttributes redirectAttributes) {
+        String[] idArray = ids.split(",");
+        int deletedCount = 0;
+        for (String id : idArray) {
+            try {
+                projectRepository.deleteById(Integer.parseInt(id.trim()));
+                deletedCount++;
+            } catch (NumberFormatException e) {
+                // Ignore invalid IDs
+            }
+        }
+        redirectAttributes.addFlashAttribute("message", deletedCount + " projet(s) supprimé(s) avec succès");
+        return "redirect:/project/list";
     }
 
     @GetMapping("/{id}")
@@ -39,14 +72,6 @@ public class ProjectController {
             return "projectDetail";
         }
         return "redirect:/project/list";
-    }
-
-    @GetMapping("/create/form")
-    public String createForm(Model model) {
-        List<Department> departments = departmentRepository.findAll();
-        model.addAttribute("departments", departments);
-        model.addAttribute("project", new Project());
-        return "addProject";
     }
 
     @PostMapping("/ProjectCreateServlet")
@@ -120,13 +145,6 @@ public class ProjectController {
         }
 
         return "redirect:/project/list";
-    }
-
-    @GetMapping("/delete/form")
-    public String deleteForm(Model model) {
-        List<Project> projects = projectRepository.findAll();
-        model.addAttribute("projects", projects);
-        return "deleteProject";
     }
 
     @PostMapping("/{id}/delete")

@@ -127,36 +127,56 @@
         Cette opération est irréversible.
     </div>
 
-    <label>Sélectionnez le projet à supprimer :</label>
-    <div style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; max-height: 300px; overflow-y: auto;">
-        <div style="padding: 0.75rem; border-bottom: 1px solid #ddd; cursor: pointer;" th:each="proj : ${projects}" th:style="${proj_last ? 'border-bottom: none' : ''}">
-            <input 
-                type="radio" 
-                name="projId" 
-                th:value="${proj.id}" 
-                th:id="'proj' + ${proj.id}"
-                style="margin-right: 0.5rem;"
-            >
-            <label th:for="'proj' + ${proj.id}" style="display: inline; cursor: pointer;">
-                <strong th:text="${proj.id}"></strong> - <span th:text="${proj.name}"></span>
-            </label>
+    <label>Sélectionnez le(s) projet(s) à supprimer :</label>
+    <div style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 0; margin-bottom: 1.5rem; max-height: 400px; overflow-y: auto;">
+        <div style="padding: 1rem; border-bottom: 1px solid #ddd; cursor: pointer; transition: background 0.2s;" 
+             th:each="proj,projStat : ${projects}" 
+             th:style="${projStat.last ? 'border-bottom: none' : ''}"
+             onmouseover="this.style.backgroundColor='#f0f0f0'"
+             onmouseout="this.style.backgroundColor='#fff'">
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                <input 
+                    type="checkbox" 
+                    name="projIds" 
+                    th:value="${proj.id}" 
+                    th:id="'proj' + ${proj.id}"
+                    style="margin-top: 0.25rem; cursor: pointer;"
+                >
+                <label th:for="'proj' + ${proj.id}" style="display: flex; flex-direction: column; cursor: pointer; flex: 1;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
+                        <strong style="color: #000; font-size: 1rem;">Projet :</strong>
+                        <span style="color: #2d3748; font-weight: 600; font-size: 0.95rem;" th:text="${proj.name}"></span>
+                    </div>
+                    <div style="color: #666; font-size: 0.85rem; margin-bottom: 0.25rem;" th:if="${proj.description}" th:text="${proj.description}"></div>
+                    <div style="display: flex; gap: 1rem; color: #888; font-size: 0.8rem;">
+                        <span th:if="${proj.startDate}" th:text="${'Début: ' + #dates.format(proj.startDate, 'dd/MM/yyyy')}"></span>
+                        <span th:if="${proj.endDate}" th:text="${'Fin: ' + #dates.format(proj.endDate, 'dd/MM/yyyy')}"></span>
+                        <span th:if="${proj.status}" th:text="${'Status: ' + proj.status}"></span>
+                    </div>
+                </label>
+            </div>
         </div>
     </div>
 
     <div class="button-group">
-        <button onclick="deleteProject()">Supprimer</button>
         <a href="/dashboard" class="btn-cancel">Annuler</a>
+        <button onclick="deleteProject()">Supprimer</button>
     </div>
 
     <script>
         function deleteProject() {
-            const selected = document.querySelector('input[name="projId"]:checked');
-            if (!selected) {
-                alert('Veuillez sélectionner un projet');
+            const selected = Array.from(document.querySelectorAll('input[name="projIds"]:checked'));
+            if (selected.length === 0) {
+                alert('Veuillez sélectionner au moins un projet');
                 return;
             }
-            if (confirm('Êtes-vous VRAIMENT sûr ? Cette action est irréversible.')) {
-                window.location.href = `/project/remove/${selected.value}`;
+            const message = selected.length === 1 
+                ? 'Êtes-vous VRAIMENT sûr ? Cette action est irréversible.' 
+                : `Êtes-vous VRAIMENT sûr ? Vous allez supprimer ${selected.length} projet(s). Cette action est irréversible.`;
+            
+            if (confirm(message)) {
+                const ids = selected.map(cb => cb.value).join(',');
+                window.location.href = `/project/remove/${ids}`;
             }
         }
     </script>
