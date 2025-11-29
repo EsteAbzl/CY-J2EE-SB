@@ -150,25 +150,4 @@ public class EmployeeController {
         redirectAttributes.addFlashAttribute("message", "Employé supprimé avec succès");
         return "redirect:/employee/list";
     }
-
-    @GetMapping("/deactivate/form")
-    public String deactivateForm(Model model) {
-        return "deactivateEmployee";
-    }
-
-    @GetMapping("/deactivate/{id}")
-    public String deactivateEmployee(
-            @PathVariable Integer id,
-            RedirectAttributes redirectAttributes) {
-        Optional<Employee> employeeOpt = employeeRepository.findById(id);
-        if (employeeOpt.isPresent()) {
-            Employee emp = employeeOpt.get();
-            emp.setActive(false);
-            employeeRepository.save(emp);
-            redirectAttributes.addFlashAttribute("message", "Employé désactivé avec succès");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Employé non trouvé");
-        }
-        return "redirect:/dashboard";
-    }
 }

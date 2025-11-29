@@ -12,7 +12,7 @@ public class User {
     @Column(length = 30)
     private String username;
 
-    @Column(name = "password_hash", length = 30)
+    @Column(length = 30)
     private String passwordHash;
 
     @Column(length = 30)

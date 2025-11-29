@@ -92,24 +92,4 @@ public class DepartmentController {
         redirectAttributes.addFlashAttribute("message", "Département supprimé avec succès");
         return "redirect:/department/list";
     }
-
-    @GetMapping("/remove/form")
-    public String removeForm(Model model) {
-        List<Department> departments = departmentRepository.findAll();
-        model.addAttribute("departments", departments);
-        return "deleteDepartment";
-    }
-
-    @GetMapping("/remove/{id}")
-    public String removeDepartment(
-            @PathVariable Integer id,
-            RedirectAttributes redirectAttributes) {
-        try {
-            departmentRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("message", "Département supprimé avec succès");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression du département");
-        }
-        return "redirect:/dashboard";
-    }
 }

@@ -128,39 +128,4 @@ public class ProjectController {
         redirectAttributes.addFlashAttribute("message", "Projet supprimé avec succès");
         return "redirect:/project/list";
     }
-
-    @GetMapping("/delete/form")
-    public String deleteForm(Model model) {
-        List<Project> projects = projectRepository.findAll();
-        model.addAttribute("projects", projects);
-        return "deleteProject";
-    }
-
-    @GetMapping("/remove/{id}")
-    public String removeProject(
-            @PathVariable Integer id,
-            RedirectAttributes redirectAttributes) {
-        try {
-            projectRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("message", "Projet supprimé avec succès");
-            return "redirect:/dashboard";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression du projet");
-            return "redirect:/project/delete/form";
-        }
-    }
-
-    @PostMapping("/remove")
-    public String removeProjectOld(
-            @RequestParam Integer projectId,
-            RedirectAttributes redirectAttributes) {
-        try {
-            projectRepository.deleteById(projectId);
-            redirectAttributes.addFlashAttribute("message", "Projet supprimé avec succès");
-            return "redirect:/dashboard";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression du projet");
-            return "redirect:/project/delete/form";
-        }
-    }
 }
