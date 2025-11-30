@@ -5,10 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2589eb88-df31-46c1-ad64-6a50f7efc487" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/ProjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/EmployeeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/EmployeeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/projectsList.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/projectsList.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/projectsList.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/projectsList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/departmentsList.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/departmentsList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/DashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/DashboardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/LoginController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/departmentsList.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/departmentsList.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +102,7 @@
       <workItem from="1764365328046" duration="3020000" />
       <workItem from="1764369275085" duration="386000" />
       <workItem from="1764369684679" duration="4376000" />
-      <workItem from="1764430818422" duration="14068000" />
+      <workItem from="1764430818422" duration="16849000" />
     </task>
     <servers />
   </component>

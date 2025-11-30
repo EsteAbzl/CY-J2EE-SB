@@ -12,8 +12,14 @@
         tr:nth-child(even) { background:#f9f9f9; }
         .btn { display:inline-block; background:#2a5298; color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:8px; font-weight:bold; margin:.25rem; transition:.3s; }
         .btn:hover { background:#1e3c72; cursor: pointer; }
+        .btn-info { background:#3498db; }
+        .btn-info:hover { background:#2980b9; }
+        .btn-warning { background:#f39c12; }
+        .btn-warning:hover { background:#d68910; }
         .btn-danger { background:#c0392b; }
         .btn-danger:hover { background:#962d22; }
+        .btn-success { background:#27ae60; }
+        .btn-success:hover { background:#229954; }
         .actions { text-align:center; margin-top:1rem; }
     </style>
 </head>
@@ -31,8 +37,8 @@
         <td th:text="${dept.name}"></td>
         <td th:text="${dept.description}"></td>
         <td>
-            <a th:href="'/department/' + ${dept.id}" class="btn">Voir membres</a>
-            <a th:href="'/department/' + ${dept.id} + '/edit'" class="btn">Éditer</a>
+            <a th:href="'/department/' + ${dept.id}" class="btn btn-info">Voir membres</a>
+            <a th:href="'/department/' + ${dept.id} + '/edit'" class="btn btn-warning">Éditer</a>
             <form th:action="'/department/' + ${dept.id} + '/delete'" method="post" style="display:inline;">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
             </form>
@@ -41,7 +47,7 @@
 </table>
 
 <div class="actions">
-    <a href="/department/create/form" class="btn">Ajouter un département</a>
+    <a href="/department/create/form" class="btn btn-success">Ajouter un département</a>
     <a href="/dashboard" class="btn">Retour au tableau de bord</a>
 </div>
 </body>

@@ -12,7 +12,7 @@ public class DashboardController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/login";
+        return "index";
     }
 
     @GetMapping("/dashboard.jsp")
