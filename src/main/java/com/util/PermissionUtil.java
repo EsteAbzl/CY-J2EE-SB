@@ -36,8 +36,6 @@ public class PermissionUtil {
         ArrayList<Integer> DepartmentIds = new ArrayList<>(Arrays.asList(allowedDepartmentIds));
         ArrayList<Integer> EmployeeIds = new ArrayList<>(Arrays.asList(allowedEmployeeIds));
 
-        System.out.println("Department allowed: " + DepartmentIds + "\nEmployee allowed: " + EmployeeIds);
-
         ValidationEnum res = ValidationEnum.DENIED;
 
         HttpSession session = req.getSession();
@@ -57,7 +55,6 @@ public class PermissionUtil {
             res = ValidationEnum.NOT_LOGGED;
         }
 
-        System.out.println("Is allowed? : " + res);
         return res;
     }
 
@@ -78,6 +75,9 @@ public class PermissionUtil {
                 break;
             case NOT_LOGGED:
                 req.getRequestDispatcher("/" + pageNotLogged).forward(req, resp);
+                break;
+            case ALLOWED:
+                // Déjà traité avant l'appel
                 break;
         }
     }
