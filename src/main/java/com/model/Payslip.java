@@ -11,13 +11,13 @@ public class Payslip {
     private Integer id;
 
     @Column
-    private int employeeId;
+    private Integer employeeId;
 
     @Column
-    private int periodYear;
+    private Integer periodYear;
 
     @Column
-    private int periodMonth;
+    private Integer periodMonth;
 
     @Column
     private double baseSalary;
@@ -46,7 +46,7 @@ public class Payslip {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -54,7 +54,7 @@ public class Payslip {
         return periodYear;
     }
 
-    public void setPeriodYear(int periodYear) {
+    public void setPeriodYear(Integer periodYear) {
         this.periodYear = periodYear;
     }
 
@@ -62,7 +62,7 @@ public class Payslip {
         return periodMonth;
     }
 
-    public void setPeriodMonth(int periodMonth) {
+    public void setPeriodMonth(Integer periodMonth) {
         this.periodMonth = periodMonth;
     }
 

@@ -127,30 +127,14 @@ public class PayslipController {
         return "payslipList";
     }
 
-    @GetMapping("/{id}")
-    public String viewPayslip(@PathVariable Integer id, Model model) {
-        Optional<Payslip> payslip = payslipRepository.findById(id);
-        if (payslip.isPresent()) {
-            model.addAttribute("payslip", payslip.get());
-            return "payslipDetail";
-        }
-        return "redirect:/payslip/list";
-    }
-
     @GetMapping("/create/form")
-    public String createForm(@RequestParam(required = false) Integer employeeId, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+    public String createForm(@RequestParam(required = true) Integer employeeId, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
         if (!SecurityUtil.isAdmin(session)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
             return "redirect:/permissionDenied";
         }
-        List<Employee> employees = employeeRepository.findAll();
-        model.addAttribute("employees", employees);
+        model.addAttribute("selectedEmployeeId", employeeId);
         model.addAttribute("payslip", new Payslip());
-        
-        // Si employeeId est fourni, pré-remplir l'employé
-        if (employeeId != null) {
-            model.addAttribute("selectedEmployeeId", employeeId);
-        }
         
         return "generatePayslip";
     }
@@ -194,11 +178,15 @@ public class PayslipController {
             double bonuses = 0;
             double deductions = 0;
             
-            for (SalaireExtra extra : extras) {
-                if (extra.getMontant() > 0) {
-                    bonuses += extra.getMontant();
-                } else {
-                    deductions += Math.abs(extra.getMontant());
+            if (extras != null && !extras.isEmpty()) {
+                for (SalaireExtra extra : extras) {
+                    double montant = extra.getMontant();
+                    if (montant > 0) {
+                        bonuses += montant;
+                    } else if (montant < 0) {
+                        deductions += Math.abs(montant);
+                    }
+                    // Si montant == 0, on l'ignore
                 }
             }
             
@@ -241,6 +229,15 @@ public class PayslipController {
             @RequestParam(defaultValue = "0") double deductions,
             @RequestParam double netPay,
             RedirectAttributes redirectAttributes) {
+
+        // Vérifier si une fiche de paie existe déjà pour cet employé et ce mois/année
+        Optional<Payslip> existingPayslip = payslipRepository.findByEmployeeIdAndPeriodYearAndPeriodMonth(
+                employeeId, periodYear, periodMonth);
+        
+        // Si une fiche existe, la supprimer pour en créer une nouvelle
+        if (existingPayslip.isPresent()) {
+            payslipRepository.delete(existingPayslip.get());
+        }
 
         Payslip payslip = new Payslip();
         payslip.setEmployeeId(employeeId);
@@ -287,16 +284,25 @@ public class PayslipController {
             List<Map<String, Object>> bonusList = new java.util.ArrayList<>();
             List<Map<String, Object>> deductionsList = new java.util.ArrayList<>();
             
-            for (SalaireExtra extra : extras) {
-                Map<String, Object> item = new java.util.HashMap<>();
-                if (extra.getMontant() > 0) {
-                    item.put("montant", String.format("%.2f", extra.getMontant()));
-                    item.put("motif", extra.getMotif() != null ? extra.getMotif() : "");
-                    bonusList.add(item);
-                } else {
-                    item.put("montant", String.format("%.2f", Math.abs(extra.getMontant())));
-                    item.put("motif", extra.getMotif() != null ? extra.getMotif() : "");
-                    deductionsList.add(item);
+            // Trier et traiter les extras
+            if (extras != null && !extras.isEmpty()) {
+                for (SalaireExtra extra : extras) {
+                    Map<String, Object> item = new java.util.HashMap<>();
+                    double montant = extra.getMontant();
+                    String motif = extra.getMotif() != null ? extra.getMotif().trim() : "Sans description";
+                    
+                    if (montant > 0) {
+                        // C'est un bonus
+                        item.put("montant", String.format("%.2f", montant));
+                        item.put("motif", motif);
+                        bonusList.add(item);
+                    } else if (montant < 0) {
+                        // C'est une déduction (montant négatif)
+                        item.put("montant", String.format("%.2f", Math.abs(montant)));
+                        item.put("motif", motif);
+                        deductionsList.add(item);
+                    }
+                    // Si montant == 0, on l'ignore
                 }
             }
             

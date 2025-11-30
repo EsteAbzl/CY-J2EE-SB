@@ -38,7 +38,10 @@ public class PermissionUtil {
 
         ValidationEnum res = ValidationEnum.DENIED;
 
-        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            return ValidationEnum.NOT_LOGGED;
+        }
         Employee employee = (Employee) session.getAttribute("SESSION_employee");
 
         if (employee != null) {

@@ -10,17 +10,17 @@ public class SalaireExtra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 30)
+    @Column
     private double montant;
 
-    @Column(length = 250)
+    @Column
     private String motif;
 
-    @Column(length = 30)
+    @Column
     private Date date;
 
-    @Column(length = 30)
-    private int employeeId;
+    @Column
+    private Integer employeeId;
 
     public Integer getId() {
         return id;
@@ -54,11 +54,11 @@ public class SalaireExtra {
         this.date = date;
     }
 
-    public int getEmployeeId() {
+    public Integer getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
     }
 }

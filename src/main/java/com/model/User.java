@@ -19,7 +19,7 @@ public class User {
     private String fullName;
 
     @Column(length = 30)
-    private int roleId;
+    private Integer roleId;
 
     @Column(length = 30)
     private boolean active;
@@ -62,11 +62,11 @@ public class User {
         this.fullName = fullName;
     }
 
-    public int getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 

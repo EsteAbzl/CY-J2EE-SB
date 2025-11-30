@@ -2,25 +2,150 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Créer un bulletin de paie</title>
+    <title>Générer une fiche de paie</title>
     <style>
-        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:Arial; padding:2rem; min-height:100vh; margin:0; }
-        h2 { text-align:center; color:#fff; }
-        form { background:#fff; border-radius:12px; padding:2rem; max-width:600px; margin:auto; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
-        label { display:block; margin-top:1rem; font-weight:bold; color:#2a5298; }
-        input, select { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; margin-top:.25rem; box-sizing: border-box; }
-        
-        .button-group { display:flex; gap:1rem; margin-top:1.5rem; }
-        .button-group .btn { flex:1; margin:0; }
-        
-        .btn { background:#2a5298; color:#fff; border:none; padding:.75rem; border-radius:8px; font-weight:bold; cursor:pointer; text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center; }
-        .btn:hover { background:#1e3c72; text-decoration:none; }
-        .btn-cancel { background:#95a5a6; }
-        .btn-cancel:hover { background:#7f8c8d; text-decoration:none; }
-        
-        .alert { padding:1rem; margin:1rem 0; border-radius:8px; }
-        .alert-danger { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
-        .alert-info { background:#d1ecf1; color:#0c5460; border:1px solid #bee5eb; }
+        body { 
+            background: linear-gradient(135deg, #1e3c72, #2a5298); 
+            font-family: Arial, sans-serif; 
+            padding: 2rem; 
+            min-height: 100vh; 
+            margin: 0; 
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        h2 { 
+            text-align: center; 
+            color: #2a5298;
+            margin-top: 0;
+        }
+        label { 
+            display: block; 
+            margin-top: 1.5rem; 
+            font-weight: bold; 
+            color: #2a5298;
+            margin-bottom: 0.5rem;
+        }
+        input, select { 
+            width: 100%; 
+            padding: 0.75rem; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42, 82, 152, 0.3);
+        }
+        .field-group {
+            margin-bottom: 1.5rem;
+        }
+        .display-value {
+            background: #f5f5f5;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-top: 0.5rem;
+        }
+        .display-label {
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .summary {
+            background: #f0f8ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid #2a5298;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.75rem 0;
+            font-size: 1.1rem;
+        }
+        .summary-label {
+            color: #555;
+        }
+        .summary-value {
+            font-weight: bold;
+            color: #2a5298;
+        }
+        .net-pay {
+            font-size: 1.3rem !important;
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+        .button-group { 
+            display: flex; 
+            gap: 1rem; 
+            margin-top: 2rem; 
+        }
+        .button-group .btn { 
+            flex: 1;
+        }
+        .btn { 
+            background: #2a5298; 
+            color: #fff; 
+            border: none; 
+            padding: 0.75rem; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-align: center; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .btn:hover { 
+            background: #1e3c72;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .btn-cancel { 
+            background: #95a5a6; 
+        }
+        .btn-cancel:hover { 
+            background: #7f8c8d;
+        }
+        .alert { 
+            padding: 1rem; 
+            margin: 1rem 0; 
+            border-radius: 8px; 
+            display: none;
+        }
+        .alert-danger { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .loading {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
     </style>
     <script>
         function loadPayslipData() {
@@ -28,71 +153,115 @@
             const dateInput = document.getElementById('bulletinDate').value;
             
             if (!employeeId || !dateInput) {
-                clearFields();
+                clearSummary();
                 return;
             }
             
             // Extraire l'année et le mois de la date
             const [year, month, day] = dateInput.split('-');
             
+            // Afficher le chargement
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('summarySectionId').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            
             fetch(`/payslip/api/data?employeeId=${employeeId}&year=${year}&month=${month}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur serveur');
+                    return response.json();
+                })
                 .then(data => {
+                    document.getElementById('loadingMessage').style.display = 'none';
                     if (data.success) {
-                        document.getElementById('baseSalary').value = data.baseSalary.toFixed(2);
-                        document.getElementById('bonuses').value = data.bonuses.toFixed(2);
-                        document.getElementById('deductions').value = data.deductions.toFixed(2);
-                        document.getElementById('netPay').value = data.netPay.toFixed(2);
+                        // Remplir les données
                         document.getElementById('periodYear').value = year;
                         document.getElementById('periodMonth').value = month;
+                        document.getElementById('baseSalary').value = data.baseSalary;
+                        document.getElementById('bonuses').value = data.bonuses;
+                        document.getElementById('deductions').value = data.deductions;
+                        document.getElementById('netPay').value = data.netPay;
+                        
+                        // Afficher le résumé
+                        document.getElementById('displayBaseSalary').textContent = data.baseSalary.toFixed(2) + ' €';
+                        document.getElementById('displayBonuses').textContent = data.bonuses.toFixed(2) + ' €';
+                        document.getElementById('displayDeductions').textContent = data.deductions.toFixed(2) + ' €';
+                        document.getElementById('displayNetPay').textContent = data.netPay.toFixed(2) + ' €';
                         document.getElementById('errorMessage').style.display = 'none';
+                        document.getElementById('summarySectionId').style.display = 'block';
                     } else {
-                        showError(data.message);
-                        clearFields();
+                        showError(data.message || 'Erreur lors du chargement des données');
+                        clearSummary();
                     }
                 })
                 .catch(error => {
-                    showError('Erreur lors du chargement des données');
-                    clearFields();
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    showError('Erreur de connexion: ' + error.message);
+                    clearSummary();
                 });
         }
         
-        function clearFields() {
-            document.getElementById('baseSalary').value = '0';
-            document.getElementById('bonuses').value = '0';
-            document.getElementById('deductions').value = '0';
-            document.getElementById('netPay').value = '0';
+        function clearSummary() {
+            document.getElementById('summarySectionId').style.display = 'none';
         }
         
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
-            errorDiv.innerHTML = message;
+            errorDiv.textContent = message;
             errorDiv.style.display = 'block';
+            clearSummary();
         }
     </script>
 </head>
 <body>
-<h2>Créer un bulletin de paie</h2>
-<form action="/payslip/PayslipCreateServlet" method="post">
-    <div id="errorMessage" class="alert alert-danger" style="display:none;"></div>
-    
-    <input type="hidden" id="employeeId" name="employeeId" th:value="${selectedEmployeeId}" required>
+<div class="container">
+    <h2>Générer une fiche de paie</h2>
+    <form action="/payslip/PayslipCreateServlet" method="post">
+        <div id="errorMessage" class="alert alert-danger"></div>
+        
+        <!-- Employé pré-sélectionné (caché) -->
+        <input type="hidden" id="employeeId" name="employeeId" th:value="${selectedEmployeeId}">
+        
+        <!-- Sélection de la date -->
+        <div class="field-group">
+            <label for="bulletinDate">Mois/Année du bulletin <span style="color: red;">*</span></label>
+            <input type="date" id="bulletinDate" required onchange="loadPayslipData()">
+            <div class="loading" id="loadingMessage" style="display:none;">⏳ Chargement des données...</div>
+        </div>
+        
+        <!-- Champs cachés pour l'envoi -->
+        <input type="hidden" id="periodYear" name="periodYear" value="0">
+        <input type="hidden" id="periodMonth" name="periodMonth" value="0">
+        <input type="hidden" id="baseSalary" name="baseSalary" value="0">
+        <input type="hidden" id="bonuses" name="bonuses" value="0">
+        <input type="hidden" id="deductions" name="deductions" value="0">
+        <input type="hidden" id="netPay" name="netPay" value="0">
+        
+        <!-- Résumé des données -->
+        <div id="summarySectionId" class="summary" style="display:none;">
+            <h3 style="margin-top: 0; color: #2a5298;">Résumé de la fiche</h3>
+            <div class="summary-row">
+                <span class="summary-label">Salaire de base:</span>
+                <span class="summary-value" id="displayBaseSalary">0.00 €</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Bonus/Primes:</span>
+                <span class="summary-value" id="displayBonuses">0.00 €</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Déductions/Malus:</span>
+                <span class="summary-value" id="displayDeductions">0.00 €</span>
+            </div>
+            <div class="summary-row net-pay">
+                <span class="summary-label">Net à payer:</span>
+                <span class="summary-value" id="displayNetPay">0.00 €</span>
+            </div>
+        </div>
 
-    <label>Date du bulletin (mois/année)</label>
-    <input type="date" id="bulletinDate" required onchange="loadPayslipData()">
-
-    <!-- Champs cachés pour les données calculées -->
-    <input type="hidden" id="periodYear" name="periodYear" value="0">
-    <input type="hidden" id="periodMonth" name="periodMonth" value="0">
-    <input type="hidden" id="baseSalary" name="baseSalary" value="0">
-    <input type="hidden" id="bonuses" name="bonuses" value="0">
-    <input type="hidden" id="deductions" name="deductions" value="0">
-    <input type="hidden" id="netPay" name="netPay" value="0">
-
-    <div class="button-group">
-        <a href="/employee/list" class="btn btn-cancel">Annuler</a>
-        <button class="btn" type="submit">Créer le bulletin</button>
-    </div>
-</form>
+        <div class="button-group">
+            <a href="/employee/list" class="btn btn-cancel">Annuler</a>
+            <button class="btn" type="submit" id="submitBtn">Générer la fiche</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

@@ -15,4 +15,14 @@ public class HomeController {
     public String home() {
         return "index";
     }
+
+    @GetMapping("/permissionDenied")
+    public String permissionDenied() {
+        return "permissionDenied";
+    }
+
+    @GetMapping("/error")
+    public String error() {
+        return "error";
+    }
 }

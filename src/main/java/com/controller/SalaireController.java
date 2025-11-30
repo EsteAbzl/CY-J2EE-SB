@@ -5,7 +5,7 @@ import com.model.SalaireExtra;
 import com.util.SecurityUtil;
 import com.repository.SalaireRepository;
 import com.repository.SalaireExtraRepository;
-import com.util.RequirePermission;
+import com.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +26,9 @@ public class SalaireController {
     @Autowired
     private SalaireExtraRepository salaireExtraRepository;
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @GetMapping("/list")
     public String listSalaires(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
         if (!SecurityUtil.isAdmin(session)) {
@@ -38,12 +41,17 @@ public class SalaireController {
     }
 
     @PostMapping("/SalaireServlet")
-    @RequirePermission(allowedDepartments = {1}, deniedPage = "permissionDenied", notLoggedPage = "Login")
     public String createSalaire(
             @RequestParam Integer employeeId,
             @RequestParam double salaire,
             @RequestParam String date,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
 
         Salaire sal = new Salaire();
         sal.setEmployeeId(employeeId);
@@ -55,40 +63,49 @@ public class SalaireController {
         return "redirect:/salaire/list";
     }
 
-    @GetMapping("/extra/list")
-    public String listSalaireExtra(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
-        if (!SecurityUtil.isAdmin(session)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
-            return "redirect:/permissionDenied";
-        }
-        List<SalaireExtra> extras = salaireExtraRepository.findAll();
-        model.addAttribute("extras", extras);
-        return "salaireExtra";
-    }
-
     @GetMapping("/extra/form")
     public String showSalaireExtraForm(@RequestParam(required = false) Integer employeeId, Model model) {
-        model.addAttribute("employeeId", employeeId);
+        model.addAttribute("selectedEmployeeId", employeeId);
         return "addSalaireExtra";
     }
 
     @PostMapping("/SalaireExtraServlet")
-    @RequirePermission(allowedDepartments = {1}, deniedPage = "permissionDenied", notLoggedPage = "Login")
     public String createSalaireExtra(
             @RequestParam Integer employeeId,
             @RequestParam double montant,
-            @RequestParam String motif,
+            @RequestParam(required = false) String motif,
             @RequestParam String date,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
+
+        // Vérifier que l'employé existe
+        if (employeeRepository.findById(employeeId).isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Employé non trouvé");
+            return "redirect:/employee/list";
+        }
+
+        // Valider le montant et la date
+        if (montant == 0) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Le montant ne peut pas être zéro");
+            return "redirect:/salaire/extra/form?employeeId=" + employeeId;
+        }
 
         SalaireExtra extra = new SalaireExtra();
         extra.setEmployeeId(employeeId);
         extra.setMontant(montant);
-        extra.setMotif(motif);
+        extra.setMotif(motif != null && !motif.trim().isEmpty() ? motif.trim() : "Sans description");
         extra.setDate(Date.valueOf(date));
 
         salaireExtraRepository.save(extra);
-        redirectAttributes.addFlashAttribute("message", "Salaire extra enregistré avec succès");
-        return "redirect:/salaire/extra/list";
+        
+        String typeExtra = montant > 0 ? "bonus" : "malus";
+        redirectAttributes.addFlashAttribute("message", 
+            String.format("%s enregistré avec succès (%.2f €)", typeExtra, Math.abs(montant)));
+        return "redirect:/employee/list";
     }
 }

@@ -61,7 +61,7 @@ public class LoginController {
             Optional<Employee> empOpt = employeeRepository.findById(user.getEmployeeId());
             if (empOpt.isPresent()) {
                 Employee emp = empOpt.get();
-                session.setAttribute("emp", emp);
+                session.setAttribute("SESSION_employee", emp);
             }
         }
 

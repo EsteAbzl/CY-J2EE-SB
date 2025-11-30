@@ -45,7 +45,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
      * Vérifie les permissions basées sur l'annotation
      */
     private PermissionUtil.ValidationEnum checkPermission(HttpServletRequest request, RequirePermission permission) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return PermissionUtil.ValidationEnum.NOT_LOGGED;
+        }
         Employee employee = (Employee) session.getAttribute("SESSION_employee");
 
         if (employee == null) {

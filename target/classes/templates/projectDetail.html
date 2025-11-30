@@ -113,11 +113,34 @@
             padding: 1.5rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
         }
 
         .member-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .remove-member-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .remove-member-btn:hover {
+            background: #962d22;
         }
 
         .member-name {
@@ -220,6 +243,9 @@
         <div th:if="${members.size() > 0}">
             <div class="members-grid">
                 <div class="member-card" th:each="member : ${members}">
+                    <form th:action="'/project/' + ${project.id} + '/member/' + ${member.id} + '/remove'" method="post" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr ?')">
+                        <button type="submit" class="remove-member-btn" title="Supprimer">×</button>
+                    </form>
                     <div class="member-name" th:text="${member.firstName + ' ' + member.lastName}"></div>
                     <span class="member-role" th:text="${projectAssignments[member.id]}"></span>
                 </div>

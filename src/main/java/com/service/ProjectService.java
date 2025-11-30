@@ -4,8 +4,10 @@ import com.model.Project;
 import com.model.Department;
 import com.repository.ProjectRepository;
 import com.repository.DepartmentRepository;
+import com.repository.ProjectAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.Optional;
@@ -18,6 +20,9 @@ public class ProjectService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private ProjectAssignmentRepository projectAssignmentRepository;
 
     /**
      * Crée ou met à jour un projet avec les paramètres fournis
@@ -37,5 +42,13 @@ public class ProjectService {
         }
 
         projectRepository.save(project);
+    }
+
+    /**
+     * Supprime un employé d'un projet
+     */
+    @Transactional
+    public void removeMemberFromProject(Integer projectId, Integer memberId) {
+        projectAssignmentRepository.deleteByProjectIdAndEmployeeId(projectId, memberId);
     }
 }

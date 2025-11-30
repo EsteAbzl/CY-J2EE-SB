@@ -193,10 +193,23 @@
     <!-- Section Bonus -->
     <div class="details-section">
         <h3>Bonus</h3>
-        <div th:if="${payslip.bonuses > 0}" class="empty-message">
-            <strong th:text="'+ ' + ${#numbers.formatDecimal(payslip.bonuses, 1, 2, 'COMMA')} + ' €'"></strong>
+        <div th:if="${#lists.size(bonuses) > 0}">
+            <table class="details-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70%;">Description</th>
+                        <th style="width: 30%;" class="montant">Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="bonus : ${bonuses}">
+                        <td th:text="${bonus.motif}"></td>
+                        <td class="montant" th:text="${bonus.montant} + ' €'"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div th:if="${payslip.bonuses == 0}" class="empty-message">
+        <div th:if="${#lists.isEmpty(bonuses)}" class="empty-message">
             Aucun bonus
         </div>
     </div>
@@ -204,10 +217,23 @@
     <!-- Section Malus/Déductions -->
     <div class="details-section">
         <h3>Malus / Déductions</h3>
-        <div th:if="${payslip.deductions > 0}" class="empty-message">
-            <strong th:text="'- ' + ${#numbers.formatDecimal(payslip.deductions, 1, 2, 'COMMA')} + ' €'"></strong>
+        <div th:if="${#lists.size(deductions) > 0}">
+            <table class="details-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70%;">Description</th>
+                        <th style="width: 30%;" class="montant">Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="deduction : ${deductions}">
+                        <td th:text="${deduction.motif}"></td>
+                        <td class="montant" th:text="${deduction.montant} + ' €'"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div th:if="${payslip.deductions == 0}" class="empty-message">
+        <div th:if="${#lists.isEmpty(deductions)}" class="empty-message">
             Aucune déduction
         </div>
     </div>

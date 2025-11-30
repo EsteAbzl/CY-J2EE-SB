@@ -11,7 +11,7 @@ public class Absence {
     private Integer id;
 
     @Column(length = 30)
-    private int employeeId;
+    private Integer employeeId;
 
     @Column(length = 30)
     private Date date;
@@ -20,7 +20,7 @@ public class Absence {
     private String type;   // CONGE, MALADIE, NON_PAYE
 
     @Column(length = 30)
-    private int hours;
+    private Integer hours;
 
     public Integer getId() {
         return id;
@@ -34,7 +34,7 @@ public class Absence {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -58,7 +58,7 @@ public class Absence {
         return hours;
     }
 
-    public void setHours(int hours) {
+    public void setHours(Integer hours) {
         this.hours = hours;
     }
 }

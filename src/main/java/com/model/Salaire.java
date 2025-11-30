@@ -17,7 +17,7 @@ public class Salaire {
     private Date date;
 
     @Column(length = 30)
-    private int employeeId;
+    private Integer employeeId;
 
     public Integer getId() {
         return id;
@@ -47,7 +47,7 @@ public class Salaire {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
     }
 }

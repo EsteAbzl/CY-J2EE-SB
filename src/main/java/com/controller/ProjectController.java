@@ -186,8 +186,17 @@ public class ProjectController {
     public String editForm(@PathVariable Integer id, Model model) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
+            Project p = project.get();
             List<Department> departments = departmentRepository.findAll();
-            model.addAttribute("project", project.get());
+            
+            // Récupérer le département actuel
+            Department currentDept = null;
+            if (p.getDepartment() != null) {
+                currentDept = p.getDepartment();
+            }
+            
+            model.addAttribute("project", p);
+            model.addAttribute("currentDept", currentDept);
             model.addAttribute("departments", departments);
             return "editProject";
         }
@@ -225,5 +234,12 @@ public class ProjectController {
         projectRepository.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "Projet supprimé avec succès");
         return "redirect:/project/list";
+    }
+
+    @PostMapping("/{projectId}/member/{memberId}/remove")
+    public String removeMemberFromProject(@PathVariable Integer projectId, @PathVariable Integer memberId, RedirectAttributes redirectAttributes) {
+        projectService.removeMemberFromProject(projectId, memberId);
+        redirectAttributes.addFlashAttribute("message", "Membre supprimé du projet");
+        return "redirect:/project/" + projectId;
     }
 }

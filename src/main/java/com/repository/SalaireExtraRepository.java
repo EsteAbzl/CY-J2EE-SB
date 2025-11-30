@@ -12,6 +12,11 @@ import java.util.List;
 public interface SalaireExtraRepository extends JpaRepository<SalaireExtra, Integer> {
     List<SalaireExtra> findByEmployeeId(Integer employeeId);
     
-    @Query("SELECT s FROM SalaireExtra s WHERE s.employeeId = :employeeId AND YEAR(s.date) = :year AND MONTH(s.date) = :month ORDER BY s.date ASC")
-    List<SalaireExtra> findByEmployeeAndYearMonth(@Param("employeeId") Integer employeeId, @Param("year") int year, @Param("month") int month);
+    // Trouver les extras pour un employé dans une période mois/année
+    @Query(value = "SELECT * FROM salaire_extra WHERE employee_id = :employeeId " +
+                   "AND YEAR(date) = :year AND MONTH(date) = :month " +
+                   "ORDER BY date ASC", nativeQuery = true)
+    List<SalaireExtra> findByEmployeeAndYearMonth(@Param("employeeId") Integer employeeId, 
+                                                   @Param("year") int year, 
+                                                   @Param("month") int month);
 }

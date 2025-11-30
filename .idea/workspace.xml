@@ -6,17 +6,50 @@
   <component name="ChangeListManager">
     <list default="true" id="b541fbc0-ddee-485d-82e9-be040d6bd4f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/DepartmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DepartmentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/EmployeeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/EmployeeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/PayslipController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/PayslipController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/ProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/SalaireController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/SalaireController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Absence.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Absence.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Payslip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Payslip.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Salaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Salaire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/SalaireExtra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/SalaireExtra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/repository/ProjectAssignmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/repository/ProjectAssignmentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/repository/SalaireExtraRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/repository/SalaireExtraRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/service/ProjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/util/PermissionInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/util/PermissionInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/util/PermissionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/util/PermissionUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/editProject.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/editProject.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/generatePayslip.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/generatePayslip.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/payslipDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/payslipDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/permissionDenied.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/permissionDenied.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/projectDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/projectDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/salaireExtra.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/AbsenceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/AbsenceController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/controller/DashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/DashboardController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/DepartmentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/DepartmentController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/controller/EmployeeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/EmployeeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/LoginController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/controller/PayslipController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/PayslipController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/controller/ProjectController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/ProjectController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/SalaireController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/SalaireController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/Absence.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/Absence.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/Payslip.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/Payslip.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/Salaire.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/Salaire.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/SalaireExtra.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/SalaireExtra.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/AbsenceRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/AbsenceRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/PayslipRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/PayslipRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/SalaireExtraRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/SalaireExtraRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/SalaireRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/SalaireRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/editProject.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/editProject.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/generatePayslip.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/generatePayslip.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/payslipDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/payslipDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/permissionDenied.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/permissionDenied.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/projectDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/projectDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/salaireExtra.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +129,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1764513722793</updated>
-      <workItem from="1764513726589" duration="2089000" />
+      <workItem from="1764513726589" duration="7025000" />
     </task>
     <servers />
   </component>

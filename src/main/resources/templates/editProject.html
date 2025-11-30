@@ -41,8 +41,9 @@
 
     <label>Département</label>
     <select name="department_id">
+        <option th:if="${currentDept}" th:value="${currentDept.id}" th:text="${'(Actuel) ' + currentDept.name}" selected></option>
         <option value="">-- Sélectionner un département --</option>
-        <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}" th:selected="${dept.id == project.departmentId}"></option>
+        <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}" th:if="${currentDept == null || dept.id != currentDept.id}"></option>
     </select>
 
     <div class="button-group">
