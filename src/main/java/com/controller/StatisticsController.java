@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.model.Employee;
+import com.util.SecurityUtil;
 import com.repository.EmployeeRepository;
 import com.repository.DepartmentRepository;
 import com.repository.ProjectRepository;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +37,11 @@ public class StatisticsController {
     private ProjectAssignmentRepository projectAssignmentRepository;
 
     @GetMapping("")
-    public String statistics(Model model) {
+    public String statistics(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         List<Employee> employees = employeeRepository.findAll();
 
         // 1. Employés par département

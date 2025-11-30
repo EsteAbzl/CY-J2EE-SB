@@ -3,12 +3,14 @@ package com.controller;
 import com.model.Absence;
 import com.model.Employee;
 import com.service.EmployeeService;
+import com.util.SecurityUtil;
 import com.repository.AbsenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.sql.Date;
 import java.util.List;
@@ -27,7 +29,14 @@ public class AbsenceController {
     @GetMapping("/list")
     public String listAbsences(
             @RequestParam(required = false) Integer employeeId,
+            HttpSession session,
+            RedirectAttributes redirectAttributes,
             Model model) {
+        
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         
         List<Absence> absences = (employeeId != null && employeeId > 0) 
             ? absenceRepository.findByEmployeeId(employeeId)
@@ -44,7 +53,11 @@ public class AbsenceController {
     }
 
     @GetMapping("/create/form")
-    public String createForm(Model model) {
+    public String createForm(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         model.addAttribute("absence", new Absence());
         return "absences";
     }

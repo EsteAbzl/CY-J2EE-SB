@@ -2,6 +2,7 @@ package com.controller;
 
 import com.model.Salaire;
 import com.model.SalaireExtra;
+import com.util.SecurityUtil;
 import com.repository.SalaireRepository;
 import com.repository.SalaireExtraRepository;
 import com.util.RequirePermission;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.sql.Date;
 import java.util.List;
@@ -25,7 +27,11 @@ public class SalaireController {
     private SalaireExtraRepository salaireExtraRepository;
 
     @GetMapping("/list")
-    public String listSalaires(Model model) {
+    public String listSalaires(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         List<Salaire> salaires = salaireRepository.findAll();
         model.addAttribute("salaires", salaires);
         return "salaire";
@@ -50,7 +56,11 @@ public class SalaireController {
     }
 
     @GetMapping("/extra/list")
-    public String listSalaireExtra(Model model) {
+    public String listSalaireExtra(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         List<SalaireExtra> extras = salaireExtraRepository.findAll();
         model.addAttribute("extras", extras);
         return "salaireExtra";

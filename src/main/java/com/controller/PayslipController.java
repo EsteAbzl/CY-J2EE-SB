@@ -5,6 +5,7 @@ import com.model.Employee;
 import com.model.Salaire;
 import com.model.SalaireExtra;
 import com.model.PayslipDTO;
+import com.util.SecurityUtil;
 import com.repository.PayslipRepository;
 import com.repository.EmployeeRepository;
 import com.repository.SalaireRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -46,7 +48,15 @@ public class PayslipController {
             @RequestParam(required = false) Integer employeeId,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
+            HttpSession session,
+            RedirectAttributes redirectAttributes,
             Model model) {
+        
+        // Seul l'admin peut voir la liste complète des bulletins
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         
         List<Payslip> payslips = payslipRepository.findAll();
         
@@ -128,7 +138,11 @@ public class PayslipController {
     }
 
     @GetMapping("/create/form")
-    public String createForm(@RequestParam(required = false) Integer employeeId, Model model) {
+    public String createForm(@RequestParam(required = false) Integer employeeId, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         List<Employee> employees = employeeRepository.findAll();
         model.addAttribute("employees", employees);
         model.addAttribute("payslip", new Payslip());

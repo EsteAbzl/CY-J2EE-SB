@@ -6,6 +6,7 @@ import com.model.Employee;
 import com.model.ProjectAssignment;
 import com.service.ProjectService;
 import com.service.EmployeeService;
+import com.util.SecurityUtil;
 import com.repository.ProjectRepository;
 import com.repository.DepartmentRepository;
 import com.repository.EmployeeRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +46,11 @@ public class ProjectController {
     private EmployeeService employeeService;
 
     @GetMapping("/list")
-    public String listProjects(Model model) {
+    public String listProjects(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         List<Project> projects = projectRepository.findAll();
         List<Department> departments = departmentRepository.findAll();
         model.addAttribute("projects", projects);
@@ -53,7 +59,11 @@ public class ProjectController {
     }
 
     @GetMapping("/create/form")
-    public String createForm(Model model) {
+    public String createForm(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         List<Department> departments = departmentRepository.findAll();
         model.addAttribute("departments", departments);
         model.addAttribute("project", new Project());
@@ -61,7 +71,11 @@ public class ProjectController {
     }
 
     @GetMapping("/delete/form")
-    public String deleteForm(Model model) {
+    public String deleteForm(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         List<Project> projects = projectRepository.findAll();
         model.addAttribute("projects", projects);
         return "deleteProject";
@@ -102,7 +116,11 @@ public class ProjectController {
     }
 
     @GetMapping("/remove/{ids}")
-    public String deleteMultipleProjects(@PathVariable String ids, RedirectAttributes redirectAttributes) {
+    public String deleteMultipleProjects(@PathVariable String ids, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         String[] idArray = ids.split(",");
         int deletedCount = 0;
         for (String id : idArray) {
@@ -113,7 +131,7 @@ public class ProjectController {
                 // Ignore invalid IDs
             }
         }
-        redirectAttributes.addFlashAttribute("message", deletedCount + " projet(s) supprimé(s) avec succès");
+        redirectAttributes.addFlashAttribute("message", deletedCount + " projet(s) supprim\u00e9(s) avec succ\u00e8s");
         return "redirect:/project/list";
     }
 

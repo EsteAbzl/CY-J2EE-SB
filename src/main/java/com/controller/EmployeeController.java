@@ -8,6 +8,7 @@ import com.model.Absence;
 import com.model.Payslip;
 import com.model.ProjectAssignment;
 import com.service.EmployeeService;
+import com.util.SecurityUtil;
 import com.repository.EmployeeRepository;
 import com.repository.DepartmentRepository;
 import com.repository.UserRepository;
@@ -62,7 +63,15 @@ public class EmployeeController {
             @RequestParam(required = false) String grade,
             @RequestParam(required = false) String position,
             @RequestParam(required = false) Integer department,
+            HttpSession session,
+            RedirectAttributes redirectAttributes,
             Model model) {
+
+        // Protéger l'accès - seul l'admin peut voir la liste
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
 
         List<Employee> employees = employeeService.searchEmployees(query, grade, position, department);
 
@@ -96,7 +105,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public String viewEmployee(@PathVariable Integer id, Model model) {
+    public String viewEmployee(@PathVariable Integer id, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isPresent()) {
             model.addAttribute("employee", employee.get());
@@ -106,7 +119,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/create/form")
-    public String createForm(Model model) {
+    public String createForm(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         List<Department> departments = departmentRepository.findAll();
         model.addAttribute("departments", departments);
         model.addAttribute("employee", new Employee());
@@ -154,7 +171,13 @@ public class EmployeeController {
             @RequestParam(required = false) String hire_day,
             @RequestParam(required = false) String hire_month,
             @RequestParam(required = false) String hire_year,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
 
         Employee emp = new Employee();
         emp.setFirstName(first_name);
@@ -216,7 +239,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Integer id, Model model) {
+    public String editForm(@PathVariable Integer id, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isPresent()) {
             List<Department> departments = departmentRepository.findAll();
@@ -237,7 +264,13 @@ public class EmployeeController {
             @RequestParam String position_title,
             @RequestParam double base_salary,
             @RequestParam(required = false) Integer department_id,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            return "redirect:/permissionDenied";
+        }
 
         Optional<Employee> employeeOpt = employeeRepository.findById(id);
         if (employeeOpt.isPresent()) {
@@ -258,7 +291,11 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteEmployee(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+    public String deleteEmployee(@PathVariable Integer id, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         employeeRepository.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "Employé supprimé avec succès");
         return "redirect:/employee/list";

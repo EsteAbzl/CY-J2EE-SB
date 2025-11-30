@@ -3,6 +3,7 @@ package com.controller;
 import com.model.Department;
 import com.model.Employee;
 import com.service.EmployeeService;
+import com.util.SecurityUtil;
 import com.repository.DepartmentRepository;
 import com.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,14 +31,22 @@ public class DepartmentController {
     private EmployeeService employeeService;
 
     @GetMapping("/list")
-    public String listDepartments(Model model) {
+    public String listDepartments(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         List<Department> departments = departmentRepository.findAll();
         model.addAttribute("departments", departments);
         return "departmentsList";
     }
 
     @GetMapping("/{id}")
-    public String viewDepartment(@PathVariable Integer id, Model model) {
+    public String viewDepartment(@PathVariable Integer id, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         Optional<Department> department = departmentRepository.findById(id);
         if (!department.isPresent()) {
             return "redirect:/department/list";
@@ -49,7 +59,11 @@ public class DepartmentController {
     }
 
     @GetMapping("/create/form")
-    public String createForm(Model model) {
+    public String createForm(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         model.addAttribute("department", new Department());
         return "addDepartment";
     }
@@ -58,7 +72,13 @@ public class DepartmentController {
     public String createDepartment(
             @RequestParam String name,
             @RequestParam String description,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
 
         Department dept = new Department();
         dept.setName(name);
@@ -70,7 +90,11 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Integer id, Model model) {
+    public String editForm(@PathVariable Integer id, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         Optional<Department> department = departmentRepository.findById(id);
         if (department.isPresent()) {
             model.addAttribute("department", department.get());
@@ -84,7 +108,13 @@ public class DepartmentController {
             @PathVariable Integer id,
             @RequestParam String name,
             @RequestParam String description,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
 
         Optional<Department> departmentOpt = departmentRepository.findById(id);
         if (departmentOpt.isPresent()) {
@@ -100,14 +130,22 @@ public class DepartmentController {
     }
 
     @GetMapping("/remove/form")
-    public String removeForm(Model model) {
+    public String removeForm(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         List<Department> departments = departmentRepository.findAll();
         model.addAttribute("departments", departments);
         return "deleteDepartment";
     }
 
     @GetMapping("/remove/{ids}")
-    public String deleteMultipleDepartments(@PathVariable String ids, RedirectAttributes redirectAttributes) {
+    public String deleteMultipleDepartments(@PathVariable String ids, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (!SecurityUtil.isAdmin(session)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         String[] idArray = ids.split(",");
         int deletedCount = 0;
         

@@ -42,9 +42,7 @@ public class AuthService {
             case 1:
                 return "/dashboard";
             case 2:
-                return "/managerDashboard";
             case 3:
-                return "/managerDashboard";
             case 4:
             default:
                 return "/employeeDashboard";

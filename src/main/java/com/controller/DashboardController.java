@@ -26,17 +26,27 @@ public class DashboardController {
     }
 
     @GetMapping({"/dashboard.jsp", "/dashboard"})
-    public String adminDashboard() {
+    public String adminDashboard(HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRoleId() != 1) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         return "dashboard";
     }
 
     @GetMapping({"/managerDashboard.jsp", "/managerDashboard", "/projectDashboard.jsp", "/projectDashboard"})
-    public String managerDashboard() {
-        return "managerDashboard";
+    public String managerDashboard(HttpSession session) {
+        return "redirect:/employeeDashboard";
     }
 
     @GetMapping({"/EmployeeDashboardServlet", "/employeeDashboard"})
-    public String employeeDashboard() {
+    public String employeeDashboard(HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRoleId() != 4) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
+            return "redirect:/permissionDenied";
+        }
         return "employeeDashboard";
     }
 
