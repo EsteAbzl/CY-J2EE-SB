@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="026c920e-feaf-48cf-8b50-6a1e670bdecc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
@@ -11,6 +12,43 @@
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/util/PermissionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/util/PermissionUtil.java" afterDir="false" />
+=======
+    <list default="true" id="2589eb88-df31-46c1-ad64-6a50f7efc487" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/AbsenceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/AbsenceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/DepartmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DepartmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/EmployeeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/EmployeeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/PayslipController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/PayslipController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/ProjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/SalaireController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/SalaireController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/StatisticsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/StatisticsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Department.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Department.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Employee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Payslip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Payslip.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/ProjectAssignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/ProjectAssignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/employeeDashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/employeeDashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/payslipDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/payslipDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/payslipList.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/payslipList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/projectsList.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/projectsList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/AbsenceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/AbsenceController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/DashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/DashboardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/DepartmentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/DepartmentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/EmployeeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/EmployeeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/LoginController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/ProjectController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/ProjectController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/controller/SalaireController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/controller/SalaireController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/Department.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/Department.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/Employee.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/Employee.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/Payslip.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/Payslip.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/model/Project.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/model/Project.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/employeeDashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/employeeDashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/payslipDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/payslipDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/payslipList.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/payslipList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/projectsList.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/projectsList.html" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +67,21 @@
   }
 }]]></component>
   <component name="TaskManager">
+<<<<<<< Updated upstream
+=======
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2589eb88-df31-46c1-ad64-6a50f7efc487" name="Changes" comment="" />
+      <created>1764365326718</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764365326718</updated>
+      <workItem from="1764365328046" duration="3020000" />
+      <workItem from="1764369275085" duration="386000" />
+      <workItem from="1764369684679" duration="4376000" />
+      <workItem from="1764430818422" duration="16849000" />
+      <workItem from="1764504449514" duration="5998000" />
+    </task>
+>>>>>>> Stashed changes
     <servers />
   </component>
 </project>
