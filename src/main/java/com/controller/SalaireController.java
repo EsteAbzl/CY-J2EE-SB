@@ -56,6 +56,12 @@ public class SalaireController {
         return "salaireExtra";
     }
 
+    @GetMapping("/extra/form")
+    public String showSalaireExtraForm(@RequestParam(required = false) Integer employeeId, Model model) {
+        model.addAttribute("employeeId", employeeId);
+        return "addSalaireExtra";
+    }
+
     @PostMapping("/SalaireExtraServlet")
     @RequirePermission(allowedDepartments = {1}, deniedPage = "permissionDenied", notLoggedPage = "Login")
     public String createSalaireExtra(
