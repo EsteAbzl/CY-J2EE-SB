@@ -15,7 +15,7 @@
         
         .header {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 3rem;
             position: relative;
@@ -29,6 +29,20 @@
             transform: translateX(-50%);
             top: 50px;
             margin: 0;
+        }
+        
+        .employee-btn {
+            background: #27ae60;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .employee-btn:hover {
+            background: #1e8449;
         }
         
         .logout-btn {
@@ -98,6 +112,7 @@
 <body>
 <div class="container">
     <div class="header">
+        <a href="/employeeDashboard" class="employee-btn">👤 Espace Employé</a>
         <a href="/logout" class="logout-btn">Déconnexion</a>
         <h1>Tableau de bord</h1>
     </div>

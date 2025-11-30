@@ -43,7 +43,7 @@ public class DashboardController {
     @GetMapping({"/EmployeeDashboardServlet", "/employeeDashboard"})
     public String employeeDashboard(HttpSession session, RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
-        if (user == null || user.getRoleId() != 4) {
+        if (user == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
             return "redirect:/permissionDenied";
         }
