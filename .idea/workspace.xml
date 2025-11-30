@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b541fbc0-ddee-485d-82e9-be040d6bd4f6" name="Changes" comment="" />
+    <list default="true" id="b541fbc0-ddee-485d-82e9-be040d6bd4f6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/AbsenceRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/AbsenceRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/PayslipRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/PayslipRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/SalaireRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/SalaireRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/UserRepository.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
