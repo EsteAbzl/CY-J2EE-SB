@@ -97,9 +97,21 @@ public class ProjectController {
             return "redirect:/project/list";
         }
         
-        List<Employee> employees = employeeService.getActiveEmployees();
+        List<Employee> allEmployees = employeeService.getActiveEmployees();
+        
+        // Récupérer les IDs des employés déjà assignés au projet
+        List<ProjectAssignment> existingAssignments = projectAssignmentRepository.findByProjectId(id);
+        List<Integer> assignedEmployeeIds = existingAssignments.stream()
+                .map(ProjectAssignment::getEmployeeId)
+                .collect(Collectors.toList());
+        
+        // Filtrer les employés qui ne sont pas encore assignés au projet
+        List<Employee> availableEmployees = allEmployees.stream()
+                .filter(emp -> !assignedEmployeeIds.contains(emp.getId()))
+                .collect(Collectors.toList());
+        
         model.addAttribute("project", project.get());
-        model.addAttribute("employees", employees);
+        model.addAttribute("employees", availableEmployees);
         return "assignEmployeeToProject";
     }
 
