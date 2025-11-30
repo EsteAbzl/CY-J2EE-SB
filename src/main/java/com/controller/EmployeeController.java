@@ -19,6 +19,8 @@ import java.util.Map;
 import com.model.Salaire;
 import com.repository.SalaireRepository;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.ResponseBody;
+import java.sql.Date;
 
 @Controller
 @RequestMapping("/employee")
@@ -112,6 +114,21 @@ public class EmployeeController {
         return "addEmployee";
     }
 
+    @GetMapping("/getNextId")
+    @ResponseBody
+    public Map<String, Integer> getNextId() {
+        // Récupérer le plus grand ID existant
+        List<Employee> allEmployees = employeeRepository.findAll();
+        Integer maxId = allEmployees.stream()
+                .map(Employee::getId)
+                .max(Integer::compare)
+                .orElse(0);
+        
+        Map<String, Integer> response = new HashMap<>();
+        response.put("nextId", maxId + 1);
+        return response;
+    }
+
     @PostMapping("/EmployeeCreateServlet")
     public String createEmployee(
             @RequestParam String first_name,
@@ -137,6 +154,29 @@ public class EmployeeController {
         emp.setActive(true);
 
         Employee savedEmp = employeeRepository.save(emp);
+
+        // Créer une entrée Salaire avec la date d'embauche
+        if (hire_day != null && !hire_day.isEmpty() && 
+            hire_month != null && !hire_month.isEmpty() && 
+            hire_year != null && !hire_year.isEmpty()) {
+            try {
+                int day = Integer.parseInt(hire_day);
+                int month = Integer.parseInt(hire_month);
+                int year = Integer.parseInt(hire_year);
+                
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                cal.set(year, month - 1, day);
+                java.sql.Date hireDate = new java.sql.Date(cal.getTimeInMillis());
+                
+                Salaire salaire = new Salaire();
+                salaire.setEmployeeId(savedEmp.getId());
+                salaire.setDate(hireDate);
+                salaire.setSalaire(base_salary);
+                salaireRepository.save(salaire);
+            } catch (Exception e) {
+                // Si erreur, on continue sans créer l'entrée salaire
+            }
+        }
 
         // Créer un utilisateur associé à cet employé
         User user = new User();
