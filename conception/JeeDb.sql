@@ -146,16 +146,16 @@ VALUES (1, 'admin', 'admin', 'Administrateur', 0, 1, 1),
 
 -- Example salaire (salary history for employee 1)
 INSERT INTO salaire (salaire, date, employee_id) VALUES
-                                                     (3500.00, '2025-01-15', 1),
-                                                     (3500.00, '2025-06-15', 1),
+                                                     (3500.00, '2025-01-15', 2),
                                                      (3500.00, '2025-06-15', 2),
-                                                     (3750.00, '2025-11-01', 1);
+                                                     (3500.00, '2025-06-15', 2),
+                                                     (3750.00, '2025-11-01', 2);
 
 -- Example salaire_extra (bonuses and deductions for employee 1 in November 2025)
 INSERT INTO salaire_extra (montant, motif, date, employee_id) VALUES
-                                                                  (500.00, 'Prime de performance', '2025-11-10', 1),
-                                                                  (250.00, 'Bonus d''équipe', '2025-11-15', 1),
-                                                                  (-100.00, 'Retenue pour absence', '2025-11-05', 1),
-                                                                  (-50.00, 'Avance sur salaire', '2025-11-12', 1);
+                                                                  (500.00, 'Prime de performance', '2025-11-10', 2),
+                                                                  (250.00, 'Bonus d''équipe', '2025-11-15', 2),
+                                                                  (-100.00, 'Retenue pour absence', '2025-11-05', 2),
+                                                                  (-50.00, 'Avance sur salaire', '2025-11-12', 2);
 
 
