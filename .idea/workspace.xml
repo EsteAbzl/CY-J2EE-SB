@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b541fbc0-ddee-485d-82e9-be040d6bd4f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/AbsenceRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/AbsenceRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/PayslipRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/PayslipRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/SalaireRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/SalaireRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/employeeDashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/employeeDashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/Login.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/Login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/employeeDashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/employeeDashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,9 +100,22 @@
       <workItem from="1764526293765" duration="127000" />
       <workItem from="1764526437181" duration="1756000" />
     </task>
+    <task id="LOCAL-00001" summary="Actualisation du titre">
+      <option name="closed" value="true" />
+      <created>1764534442183</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1764534442183</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Actualisation du titre" />
+    <option name="LAST_COMMIT_MESSAGE" value="Actualisation du titre" />
   </component>
 </project>
