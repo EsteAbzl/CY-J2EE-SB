@@ -42,31 +42,40 @@ public class LoginController {
             User user = userOpt.get();
             
             // Vérifier le mot de passe (storé en clair dans ce projet)
-            if (user.getPasswordHash() != null && user.getPasswordHash().equals(password)) {
+            if (user.getPasswordHash().equals(password)) {
                 session.setAttribute("user", user);
 
                 // Charger l'employé lié
+                Employee emp = null;
                 if (user.getEmployeeId() != null) {
                     Optional<Employee> empOpt = employeeRepository.findById(user.getEmployeeId());
                     if (empOpt.isPresent()) {
-                        Employee emp = empOpt.get();
+                        emp = empOpt.get();
                         session.setAttribute("emp", emp);
                         session.setAttribute("employe", emp);
+                        session.setAttribute("SESSION_employee", emp);
                         session.setAttribute("employeeId", user.getEmployeeId());
                     }
                 }
 
                 // Si firstConnexion est vrai ou mot de passe est "test", forcer le changement de mot de passe
-                boolean mustChange = false;
-                try {
-                    mustChange = user.isFirstConnexion();
-                } catch (Throwable ignore) {
-                }
-                if (mustChange || "test".equals(password)) {
+                if (user.isFirstConnexion() || "test".equals(password)) {
+                    session.setAttribute("firstConnexionRequired", true);
                     return "redirect:/changePassword";
                 }
 
-                // Redirection selon rôle
+                // Redirection selon le département de l'employé
+                if (emp != null && emp.getDepartmentId() != null) {
+                    // Département 1 = RH/ADMIN, redirection vers dashboard admin
+                    if (emp.getDepartmentId() == 1) {
+                        return "redirect:/dashboard";
+                    } else {
+                        // Autres départements, redirection vers dashboard employé
+                        return "redirect:/employeeDashboard";
+                    }
+                }
+
+                // Fallback selon le rôle utilisateur
                 switch (user.getRoleId()) {
                     case 1: // ADMIN
                         return "redirect:/dashboard";
@@ -75,9 +84,8 @@ public class LoginController {
                     case 3: // PROJECT_HEAD
                         return "redirect:/projectDashboard";
                     case 4: // EMPLOYEE
-                        return "redirect:/employeeDashboard";
                     default:
-                        return "redirect:/error";
+                        return "redirect:/employeeDashboard";
                 }
             } else {
                 redirectAttributes.addFlashAttribute("errorMessage", "Nom d'utilisateur ou mot de passe incorrect");

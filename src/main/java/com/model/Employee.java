@@ -33,6 +33,7 @@ public class Employee {
     @Column(length = 30)
     private boolean active;
 
+    @Transient
     private String roleInProject;
 
     public Integer getId() {

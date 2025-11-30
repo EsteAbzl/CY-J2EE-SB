@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès Refusé</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 60px;
+            color: #c0392b;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #c0392b;
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            background-color: #fadad5;
+            border-left: 4px solid #c0392b;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+            border-radius: 4px;
+            color: #c0392b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        a, button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.4);
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-icon">⛔</div>
+        <h1>Accès Refusé</h1>
+        <p>Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+        
+        <div class="error-message">
+            <strong>Raison :</strong> Votre rôle ou votre département n'ont pas les droits d'accès à cette ressource.
+        </div>
+
+        <p>Si vous pensez que c'est une erreur, veuillez contacter votre administrateur système.</p>
+
+        <div class="button-group">
+            <a href="/" class="btn-primary">Retour à l'accueil</a>
+            <a href="javascript:history.back()" class="btn-secondary">Retour</a>
+        </div>
+
+        <div class="footer">
+            <p>Système de Gestion des Ressources Humaines</p>
+        </div>
+    </div>
+</body>
+</html>

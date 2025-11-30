@@ -2,20 +2,22 @@ package com.controller;
 
 import com.model.Employee;
 import com.model.Department;
-import com.model.Salaire;
+import com.model.User;
 import com.repository.EmployeeRepository;
 import com.repository.DepartmentRepository;
-import com.repository.SalaireRepository;
+import com.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
+import com.model.Salaire;
+import com.repository.SalaireRepository;
 import java.util.stream.Collectors;
 
 @Controller
@@ -31,6 +33,9 @@ public class EmployeeController {
     @Autowired
     private SalaireRepository salaireRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/list")
     public String listEmployees(
             @RequestParam(required = false) String query,
@@ -41,14 +46,7 @@ public class EmployeeController {
 
         List<Employee> employees;
         
-        // Vérifier si au moins un filtre est défini et non-vide
-        boolean hasFilters = (query != null && !query.trim().isEmpty()) || 
-                           (grade != null && !grade.trim().isEmpty()) || 
-                           (position != null && !position.trim().isEmpty()) || 
-                           department != null;
-        
-        if (hasFilters) {
-            // Convertir les chaînes vides en null pour la requête
+        if (query != null || grade != null || position != null || department != null) {
             String queryParam = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
             String gradeParam = (grade != null && !grade.trim().isEmpty()) ? grade.trim() : null;
             String positionParam = (position != null && !position.trim().isEmpty()) ? position.trim() : null;
@@ -57,7 +55,7 @@ public class EmployeeController {
         } else {
             employees = employeeRepository.findAll();
         }
-        
+
         // Filtrer pour afficher SEULEMENT les employés actifs
         employees = employees.stream()
                 .filter(Employee::isActive)
@@ -84,24 +82,13 @@ public class EmployeeController {
         }
 
         model.addAttribute("employees", employees);
-        model.addAttribute("departmentNames", departmentNames);
-        model.addAttribute("firstSalaries", firstSalaries);
         model.addAttribute("grades", grades);
         model.addAttribute("positions", positions);
         model.addAttribute("departments", departments);
-        
-        // Garder les valeurs des filtres après la recherche
-        if (query != null && !query.trim().isEmpty()) {
+        model.addAttribute("departmentNames", departmentNames);
+        model.addAttribute("firstSalaries", firstSalaries);
+        if (query != null) {
             model.addAttribute("searchQuery", query);
-        }
-        if (grade != null && !grade.trim().isEmpty()) {
-            model.addAttribute("selectedGrade", grade);
-        }
-        if (position != null && !position.trim().isEmpty()) {
-            model.addAttribute("selectedPosition", position);
-        }
-        if (department != null) {
-            model.addAttribute("selectedDepartment", department);
         }
 
         return "employeesList";
@@ -134,9 +121,9 @@ public class EmployeeController {
             @RequestParam String position_title,
             @RequestParam double base_salary,
             @RequestParam(required = false) Integer department_id,
-            @RequestParam(required = false) Integer hire_day,
-            @RequestParam(required = false) Integer hire_month,
-            @RequestParam(required = false) Integer hire_year,
+            @RequestParam(required = false) String hire_day,
+            @RequestParam(required = false) String hire_month,
+            @RequestParam(required = false) String hire_year,
             RedirectAttributes redirectAttributes) {
 
         Employee emp = new Employee();
@@ -149,27 +136,21 @@ public class EmployeeController {
         emp.setDepartmentId(department_id != null ? department_id : 0);
         emp.setActive(true);
 
-        employeeRepository.save(emp);
+        Employee savedEmp = employeeRepository.save(emp);
 
-        // Créer l'enregistrement du salaire avec la date d'embauche
-        if (hire_day != null && hire_month != null && hire_year != null && 
-            hire_day > 0 && hire_month > 0 && hire_month <= 12 && hire_year > 0) {
-            Salaire salaire = new Salaire();
-            salaire.setEmployeeId(emp.getId());
-            salaire.setSalaire(base_salary);
-            
-            // Créer la date SQL (année-mois-jour)
-            String dateString = String.format("%04d-%02d-%02d", hire_year, hire_month, hire_day);
-            try {
-                java.sql.Date hireDate = java.sql.Date.valueOf(dateString);
-                salaire.setDate(hireDate);
-                salaireRepository.save(salaire);
-            } catch (IllegalArgumentException e) {
-                // Date invalide, ignorer
-            }
-        }
+        // Créer un utilisateur associé à cet employé
+        User user = new User();
+        user.setUsername(email);
+        user.setPasswordHash("test"); // Mot de passe par défaut
+        user.setFullName(first_name + " " + last_name);
+        user.setRoleId(4); // 4 = EMPLOYEE par défaut
+        user.setActive(true);
+        user.setEmployeeId(savedEmp.getId());
+        user.setFirstConnexion(true); // L'utilisateur doit changer son mot de passe à la première connexion
 
-        redirectAttributes.addFlashAttribute("message", "Employé créé avec succès");
+        userRepository.save(user);
+
+        redirectAttributes.addFlashAttribute("message", "Employé créé avec succès et compte utilisateur créé (mot de passe temporaire: test)");
         return "redirect:/employee/list";
     }
 
@@ -215,38 +196,10 @@ public class EmployeeController {
         return "redirect:/employee/list";
     }
 
-    @GetMapping("/getNextId")
-    @ResponseBody
-    public Map<String, Integer> getNextId() {
-        List<Employee> employees = employeeRepository.findAll();
-        int nextId = employees.isEmpty() ? 1 : employees.stream()
-                .mapToInt(Employee::getId)
-                .max()
-                .orElse(0) + 1;
-        
-        Map<String, Integer> response = new HashMap<>();
-        response.put("nextId", nextId);
-        return response;
-    }
-
-    @GetMapping("/deactivate/form")
-    public String deactivateForm(Model model) {
-        List<Employee> employees = employeeRepository.findAll();
-        model.addAttribute("employees", employees);
-        return "deactivateEmployee";
-    }
-
     @PostMapping("/{id}/delete")
     public String deleteEmployee(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        Optional<Employee> employeeOpt = employeeRepository.findById(id);
-        if (employeeOpt.isPresent()) {
-            Employee emp = employeeOpt.get();
-            emp.setActive(false);
-            employeeRepository.save(emp);
-            redirectAttributes.addFlashAttribute("message", "Employé désactivé avec succès");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Employé non trouvé");
-        }
+        employeeRepository.deleteById(id);
+        redirectAttributes.addFlashAttribute("message", "Employé supprimé avec succès");
         return "redirect:/employee/list";
     }
 }
