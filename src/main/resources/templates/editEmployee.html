@@ -10,6 +10,13 @@
         label { display:block; margin-top:1rem; font-weight:bold; color:#2a5298; }
         input, select, textarea { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; margin-top:.25rem; box-sizing: border-box; }
         
+        .salary-section { background:#f0f4f8; padding:1.5rem; border-radius:8px; margin-top:1.5rem; }
+        .salary-history { margin-top:1rem; }
+        .history-table { width:100%; border-collapse:collapse; margin-top:1rem; }
+        .history-table th, .history-table td { padding:.5rem; text-align:left; border-bottom:1px solid #ddd; }
+        .history-table th { background:#2a5298; color:#fff; font-weight:bold; }
+        .history-table tr:hover { background:#f5f5f5; }
+        
         .button-group { display:flex; gap:1rem; margin-top:1.5rem; }
         .button-group .btn { flex:1; margin:0; }
         
@@ -37,8 +44,15 @@
     <label>Titre du Poste</label>
     <input type="text" name="position_title" th:value="${employee.positionTitle}">
 
-    <label>Salaire de Base</label>
-    <input type="number" name="base_salary" step="0.01" th:value="${employee.baseSalary}" required>
+    <div class="salary-section">
+        <h3 style="margin-top:0; color:#2a5298;">Gestion du Salaire</h3>
+        
+        <label>Nouveau Salaire</label>
+        <input type="number" name="new_salary" step="0.01" placeholder="Laisser vide pour ne pas modifier">
+
+        <label>Date de mise en vigueur</label>
+        <input type="date" name="salary_effective_date" required>
+    </div>
 
     <label>Département</label>
     <select name="department_id">
@@ -53,3 +67,4 @@
 </form>
 </body>
 </html>
+

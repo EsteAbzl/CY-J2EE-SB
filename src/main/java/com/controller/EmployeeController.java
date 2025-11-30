@@ -241,14 +241,19 @@ public class EmployeeController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
         if (!SecurityUtil.isAdmin(session)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
             return "redirect:/permissionDenied";
         }
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isPresent()) {
             List<Department> departments = departmentRepository.findAll();
+            List<Salaire> salaries = salaireRepository.findByEmployeeId(id);
+            // Trier par date décroissante (plus récent en premier)
+            salaries.sort((a, b) -> b.getDate().compareTo(a.getDate()));
+            
             model.addAttribute("employee", employee.get());
             model.addAttribute("departments", departments);
+            model.addAttribute("salaries", salaries);
             return "editEmployee";
         }
         return "redirect:/employee/list";
@@ -262,13 +267,14 @@ public class EmployeeController {
             @RequestParam String email,
             @RequestParam String grade,
             @RequestParam String position_title,
-            @RequestParam double base_salary,
+            @RequestParam(required = false) Double new_salary,
+            @RequestParam(required = false) String salary_effective_date,
             @RequestParam(required = false) Integer department_id,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
         if (!SecurityUtil.isAdmin(session)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Acc\u00e8s refus\u00e9");
+            redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
             return "redirect:/permissionDenied";
         }
 
@@ -280,11 +286,32 @@ public class EmployeeController {
             emp.setEmail(email);
             emp.setGrade(grade);
             emp.setPositionTitle(position_title);
-            emp.setBaseSalary(base_salary);
             emp.setDepartmentId(department_id);
 
             employeeRepository.save(emp);
-            redirectAttributes.addFlashAttribute("message", "Employé mis à jour avec succès");
+
+            // Si un nouveau salaire est fourni, créer une nouvelle entrée dans Salaire
+            if (new_salary != null && new_salary > 0 && salary_effective_date != null && !salary_effective_date.isEmpty()) {
+                try {
+                    java.sql.Date effectiveDate = java.sql.Date.valueOf(salary_effective_date);
+                    
+                    Salaire salaire = new Salaire();
+                    salaire.setEmployeeId(id);
+                    salaire.setSalaire(new_salary);
+                    salaire.setDate(effectiveDate);
+                    salaireRepository.save(salaire);
+                    
+                    // Mettre à jour le baseSalary de l'employé
+                    emp.setBaseSalary(new_salary);
+                    employeeRepository.save(emp);
+                    
+                    redirectAttributes.addFlashAttribute("message", "Employé et nouveau salaire mis à jour avec succès");
+                } catch (IllegalArgumentException e) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Format de date invalide");
+                }
+            } else {
+                redirectAttributes.addFlashAttribute("message", "Employé mis à jour avec succès");
+            }
         }
 
         return "redirect:/employee/list";
