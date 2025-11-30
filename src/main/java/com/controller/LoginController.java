@@ -34,8 +34,8 @@ public class LoginController {
 
     @PostMapping("/LoginServlet")
     public String login(
-            @RequestParam String username,
-            @RequestParam String password,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
