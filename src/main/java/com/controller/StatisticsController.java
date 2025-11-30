@@ -42,7 +42,9 @@ public class StatisticsController {
             redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
             return "redirect:/permissionDenied";
         }
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees = employeeRepository.findAll().stream()
+                .filter(Employee::isActive)
+                .collect(Collectors.toList());
 
         // 1. Employés par département
         Map<String, Integer> employeesByDept = new LinkedHashMap<>();

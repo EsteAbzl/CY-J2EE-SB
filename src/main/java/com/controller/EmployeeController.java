@@ -13,6 +13,7 @@ import com.repository.EmployeeRepository;
 import com.repository.DepartmentRepository;
 import com.repository.UserRepository;
 import com.repository.SalaireRepository;
+import com.repository.SalaireExtraRepository;
 import com.repository.AbsenceRepository;
 import com.repository.PayslipRepository;
 import com.repository.ProjectAssignmentRepository;
@@ -323,8 +324,16 @@ public class EmployeeController {
             redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé");
             return "redirect:/permissionDenied";
         }
-        employeeRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("message", "Employé supprimé avec succès");
+        
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        if (optionalEmployee.isPresent()) {
+            Employee employee = optionalEmployee.get();
+            employee.setActive(false);
+            employeeRepository.save(employee);
+            redirectAttributes.addFlashAttribute("message", "Employé supprimé avec succès");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Employé non trouvé");
+        }
         return "redirect:/employee/list";
     }
 
