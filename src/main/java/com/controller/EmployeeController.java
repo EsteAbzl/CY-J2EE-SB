@@ -133,9 +133,8 @@ public class EmployeeController {
     public String createEmployee(
             @RequestParam String first_name,
             @RequestParam String last_name,
-            @RequestParam String email,
-            @RequestParam String grade,
-            @RequestParam String position_title,
+            @RequestParam(required = false) String grade,
+            @RequestParam(required = false) String position_title,
             @RequestParam double base_salary,
             @RequestParam(required = false) Integer department_id,
             @RequestParam(required = false) String hire_day,
@@ -146,14 +145,22 @@ public class EmployeeController {
         Employee emp = new Employee();
         emp.setFirstName(first_name);
         emp.setLastName(last_name);
-        emp.setEmail(email);
-        emp.setGrade(grade);
-        emp.setPositionTitle(position_title);
+        emp.setGrade(grade != null ? grade : "");
+        emp.setPositionTitle(position_title != null ? position_title : "");
         emp.setBaseSalary(base_salary);
         emp.setDepartmentId(department_id != null ? department_id : 0);
         emp.setActive(true);
+        
+        // Email temporaire pour la première sauvegarde (la DB n'accepte pas null)
+        emp.setEmail("temp@entreprise.com");
 
+        // Sauvegarder d'abord pour obtenir l'ID
         Employee savedEmp = employeeRepository.save(emp);
+        
+        // Générer l'email avec le vrai ID
+        String email = first_name.trim().toLowerCase() + "." + last_name.trim().toLowerCase() + savedEmp.getId() + "@entreprise.com";
+        savedEmp.setEmail(email);
+        employeeRepository.save(savedEmp);
 
         // Créer une entrée Salaire avec la date d'embauche
         if (hire_day != null && !hire_day.isEmpty() && 

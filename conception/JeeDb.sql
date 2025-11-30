@@ -133,7 +133,7 @@ VALUES ('Ressources Humaines', 'Département responsable de la gestion des resso
 
 -- Example employee
 INSERT INTO employees (first_name, last_name, email, grade, position_title, base_salary, department_id, active)
-VALUES ('Jean', 'Dupont', 'jean.dupont@company.com', 'Senior', 'Responsable RH', 3500.00, 1, 1);
+VALUES ('Jean', 'Dupont', 'jean.dupont@entreprise.com', 'Senior', 'Responsable RH', 3500.00, 1, 1);
 
 -- Example admin user (password: admin123 hashed with BCrypt placeholder; replace in real)
 -- admin user (first_connexion = 0)

@@ -36,8 +36,7 @@
     <input type="text" name="last_name" id="lastName" required>
 
     <label>Email</label>
-    <input type="email" name="email" id="email" readonly>
-    <div id="emailPreview">prénom.nom&lt;id&gt;@company.com</div>
+    <input type="text" id="emailDisplay" readonly>
 
     <label>Grade</label>
     <input type="text" name="grade">
@@ -90,32 +89,17 @@
 <script>
     const firstNameInput = document.getElementById('firstName');
     const lastNameInput = document.getElementById('lastName');
-    const emailInput = document.getElementById('email');
-    const emailPreview = document.getElementById('emailPreview');
+    const emailDisplay = document.getElementById('emailDisplay');
 
     function generateEmail() {
         const firstName = firstNameInput.value.trim().toLowerCase();
         const lastName = lastNameInput.value.trim().toLowerCase();
         
         if (firstName && lastName) {
-            // Fetch the next employee ID from the server
-            fetch('/employee/getNextId')
-                .then(response => response.json())
-                .then(data => {
-                    const nextId = data.nextId;
-                    const generatedEmail = firstName + '.' + lastName + nextId + '@company.com';
-                    emailInput.value = generatedEmail;
-                    emailPreview.textContent = firstName + '.' + lastName + '<' + nextId + '>@company.com';
-                })
-                .catch(() => {
-                    // Fallback if server request fails
-                    const generatedEmail = firstName + '.' + lastName + '@company.com';
-                    emailInput.value = generatedEmail;
-                    emailPreview.textContent = firstName + '.' + lastName + '<id>@company.com';
-                });
+            // Affiche juste <id> - le vrai ID sera généré côté serveur
+            emailDisplay.value = firstName + '.' + lastName + '<id>@entreprise.com';
         } else {
-            emailInput.value = '';
-            emailPreview.textContent = 'prénom.nom<id>@company.com';
+            emailDisplay.value = '';
         }
     }
 
