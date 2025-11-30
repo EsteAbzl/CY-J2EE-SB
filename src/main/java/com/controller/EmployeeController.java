@@ -228,7 +228,12 @@ public class EmployeeController {
         user.setUsername(email);
         user.setPasswordHash("test"); // Mot de passe par défaut
         user.setFullName(first_name + " " + last_name);
-        user.setRoleId(4); // 4 = EMPLOYEE par défaut
+        // Si département RH (id=1), donner le rôle admin (1), sinon employé (4)
+        if (department_id != null && department_id == 1) {
+            user.setRoleId(1); // 1 = ADMIN (RH)
+        } else {
+            user.setRoleId(4); // 4 = EMPLOYEE par défaut
+        }
         user.setActive(true);
         user.setEmployeeId(savedEmp.getId());
         user.setFirstConnexion(true); // L'utilisateur doit changer son mot de passe à la première connexion
@@ -290,6 +295,19 @@ public class EmployeeController {
             emp.setDepartmentId(department_id);
 
             employeeRepository.save(emp);
+
+            // Mettre à jour le rôle de l'utilisateur selon le département
+            Optional<User> userOpt = userRepository.findByEmployeeId(id);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                // Si département RH (id=1), donner le rôle admin (1), sinon employé (4)
+                if (department_id != null && department_id == 1) {
+                    user.setRoleId(1); // 1 = ADMIN (RH)
+                } else {
+                    user.setRoleId(4); // 4 = EMPLOYEE
+                }
+                userRepository.save(user);
+            }
 
             // Si un nouveau salaire est fourni, créer une nouvelle entrée dans Salaire
             if (new_salary != null && new_salary > 0 && salary_effective_date != null && !salary_effective_date.isEmpty()) {
