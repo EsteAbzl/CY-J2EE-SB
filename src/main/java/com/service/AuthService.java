@@ -40,9 +40,11 @@ public class AuthService {
         // Fallback selon le rôle
         switch (user.getRoleId()) {
             case 1:
-            case 2:
-            case 3:
                 return "/dashboard";
+            case 2:
+                return "/managerDashboard";
+            case 3:
+                return "/managerDashboard";
             case 4:
             default:
                 return "/employeeDashboard";

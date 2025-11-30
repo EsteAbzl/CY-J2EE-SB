@@ -30,6 +30,11 @@ public class DashboardController {
         return "dashboard";
     }
 
+    @GetMapping({"/managerDashboard.jsp", "/managerDashboard", "/projectDashboard.jsp", "/projectDashboard"})
+    public String managerDashboard() {
+        return "managerDashboard";
+    }
+
     @GetMapping({"/EmployeeDashboardServlet", "/employeeDashboard"})
     public String employeeDashboard() {
         return "employeeDashboard";

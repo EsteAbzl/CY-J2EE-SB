@@ -8,8 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.method.HandlerMethod;
 
-import java.util.Arrays;
-
 /**
  * Interceptor pour vérifier les permissions d'accès
  */
