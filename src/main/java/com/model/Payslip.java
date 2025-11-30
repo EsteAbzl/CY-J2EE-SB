@@ -10,28 +10,28 @@ public class Payslip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 30)
+    @Column
     private int employeeId;
 
-    @Column(length = 30)
+    @Column
     private int periodYear;
 
-    @Column(length = 30)
+    @Column
     private int periodMonth;
 
-    @Column(length = 30)
+    @Column
     private double baseSalary;
 
-    @Column(length = 30)
+    @Column
     private double bonuses;
 
-    @Column(length = 30)
+    @Column
     private double deductions;
 
-    @Column(length = 30)
+    @Column
     private double netPay;
 
-    @Column(length = 30)
+    @Column
     private Timestamp generatedAt;
 
     public Integer getId() {

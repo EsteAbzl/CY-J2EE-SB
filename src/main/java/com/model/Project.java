@@ -10,23 +10,24 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 30)
+    @Column(length = 100)
     private String name;
 
-    @Column(length = 30)
+    @Column(length = 500)
     private String description;
 
     @Column(length = 30)
-    private String status; // EN_COURS, TERMINE, ANNULE
+    private String status;
 
-    @Column(length = 30)
+    @Column
     private Date startDate;
 
-    @Column(length = 30)
+    @Column
     private Date endDate;
 
-    @Column(length = 30)
-    private Integer departmentId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id", insertable = true, updatable = true)
+    private Department department;
 
     public Integer getId() {
         return id;
@@ -76,11 +77,11 @@ public class Project {
         this.endDate = endDate;
     }
 
-    public Integer getDepartmentId() {
-        return departmentId;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setDepartmentId(Integer departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

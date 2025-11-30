@@ -2,6 +2,7 @@ package com.controller;
 
 import com.model.Department;
 import com.model.Employee;
+import com.service.EmployeeService;
 import com.repository.DepartmentRepository;
 import com.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class DepartmentController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private EmployeeService employeeService;
+
     @GetMapping("/list")
     public String listDepartments(Model model) {
         List<Department> departments = departmentRepository.findAll();
@@ -34,17 +38,14 @@ public class DepartmentController {
     @GetMapping("/{id}")
     public String viewDepartment(@PathVariable Integer id, Model model) {
         Optional<Department> department = departmentRepository.findById(id);
-        if (department.isPresent()) {
-            // Récupérer tous les employés actifs du département
-            List<Employee> employees = employeeRepository.findAll().stream()
-                    .filter(e -> e.getDepartmentId() != null && e.getDepartmentId().equals(id) && e.isActive())
-                    .collect(Collectors.toList());
-            
-            model.addAttribute("department", department.get());
-            model.addAttribute("employees", employees);
-            return "departmentMembers";
+        if (!department.isPresent()) {
+            return "redirect:/department/list";
         }
-        return "redirect:/department/list";
+        
+        List<Employee> employees = employeeService.getActiveEmployeesByDepartment(id);
+        model.addAttribute("department", department.get());
+        model.addAttribute("employees", employees);
+        return "departmentMembers";
     }
 
     @GetMapping("/create/form")
@@ -113,20 +114,7 @@ public class DepartmentController {
         for (String idStr : idArray) {
             try {
                 Integer id = Integer.parseInt(idStr.trim());
-                Optional<Department> departmentOpt = departmentRepository.findById(id);
-                if (departmentOpt.isPresent()) {
-                    // Avant de supprimer le département, désactiver tous les employés du département
-                    List<Employee> employees = employeeRepository.findAll().stream()
-                            .filter(e -> e.getDepartmentId() != null && e.getDepartmentId().equals(id))
-                            .collect(Collectors.toList());
-                    
-                    for (Employee emp : employees) {
-                        emp.setActive(false);
-                        employeeRepository.save(emp);
-                    }
-                    
-                    // Maintenant supprimer le département
-                    departmentRepository.deleteById(id);
+                if (deleteDepartmentById(id)) {
                     deletedCount++;
                 }
             } catch (NumberFormatException e) {
@@ -135,7 +123,7 @@ public class DepartmentController {
         }
         
         if (deletedCount > 0) {
-            redirectAttributes.addFlashAttribute("message", deletedCount + " département(s) supprimé(s) avec succès (employés désactivés)");
+            redirectAttributes.addFlashAttribute("message", deletedCount + " département(s) supprimé(s) avec succès");
         } else {
             redirectAttributes.addFlashAttribute("error", "Aucun département n'a pu être supprimé");
         }
@@ -144,24 +132,33 @@ public class DepartmentController {
 
     @PostMapping("/{id}/delete")
     public String deleteDepartment(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        Optional<Department> departmentOpt = departmentRepository.findById(id);
-        if (departmentOpt.isPresent()) {
-            // Avant de supprimer le département, désactiver tous les employés du département
-            List<Employee> employees = employeeRepository.findAll().stream()
-                    .filter(e -> e.getDepartmentId() != null && e.getDepartmentId().equals(id))
-                    .collect(Collectors.toList());
-            
-            for (Employee emp : employees) {
-                emp.setActive(false);
-                employeeRepository.save(emp);
-            }
-            
-            // Maintenant supprimer le département
-            departmentRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("message", "Département supprimé avec succès (employés désactivés)");
+        if (deleteDepartmentById(id)) {
+            redirectAttributes.addFlashAttribute("message", "Département supprimé avec succès");
         } else {
-            redirectAttributes.addFlashAttribute("error", "Département non trouvé");
+            redirectAttributes.addFlashAttribute("error", "Impossible de supprimer le département");
         }
         return "redirect:/department/list";
+    }
+
+    /**
+     * Helper method pour supprimer un département et désactiver ses employés
+     */
+    private boolean deleteDepartmentById(Integer id) {
+        Optional<Department> departmentOpt = departmentRepository.findById(id);
+        if (!departmentOpt.isPresent()) {
+            return false;
+        }
+
+        List<Employee> employees = employeeRepository.findAll().stream()
+                .filter(e -> e.getDepartmentId() != null && e.getDepartmentId().equals(id))
+                .collect(Collectors.toList());
+        
+        employees.forEach(emp -> {
+            emp.setActive(false);
+            employeeRepository.save(emp);
+        });
+        
+        departmentRepository.deleteById(id);
+        return true;
     }
 }

@@ -1,0 +1,41 @@
+package com.service;
+
+import com.model.Project;
+import com.model.Department;
+import com.repository.ProjectRepository;
+import com.repository.DepartmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.Date;
+import java.util.Optional;
+
+@Service
+public class ProjectService {
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    /**
+     * Crée ou met à jour un projet avec les paramètres fournis
+     */
+    public void saveProject(Project project, Integer departmentId, String startDate, String endDate) {
+        if (departmentId != null) {
+            Optional<Department> dept = departmentRepository.findById(departmentId);
+            dept.ifPresent(project::setDepartment);
+        }
+
+        if (startDate != null && !startDate.isBlank()) {
+            project.setStartDate(Date.valueOf(startDate));
+        }
+        
+        if (endDate != null && !endDate.isBlank()) {
+            project.setEndDate(Date.valueOf(endDate));
+        }
+
+        projectRepository.save(project);
+    }
+}

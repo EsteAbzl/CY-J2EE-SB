@@ -17,6 +17,10 @@ public class ProjectAssignment {
     @Column(name = "role_in_project", length = 100)
     private String roleInProject;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "project_id", insertable = false, updatable = false)
+    private Project project;
+
     public ProjectAssignment() {}
 
     public ProjectAssignment(Integer projectId, Integer employeeId, String roleInProject) {
@@ -48,5 +52,13 @@ public class ProjectAssignment {
 
     public void setRoleInProject(String roleInProject) {
         this.roleInProject = roleInProject;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

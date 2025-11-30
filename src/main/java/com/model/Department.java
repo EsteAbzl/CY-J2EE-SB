@@ -9,10 +9,10 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 30)
+    @Column(length = 100)
     private String name;
 
-    @Column(length = 30)
+    @Column(length = 300)
     private String description;
 
     public Integer getId() {

@@ -9,28 +9,28 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 30)
+    @Column(length = 50)
     private String firstName;
 
-    @Column(length = 30)
+    @Column(length = 50)
     private String lastName;
 
-    @Column(length = 30)
+    @Column(length = 100)
     private String email;
 
-    @Column(length = 30)
+    @Column(length = 50)
     private String grade;
 
-    @Column(length = 30)
+    @Column(length = 100)
     private String positionTitle;
 
-    @Column(length = 30)
+    @Column
     private double baseSalary;
 
-    @Column(length = 30)
+    @Column
     private Integer departmentId;
 
-    @Column(length = 30)
+    @Column
     private boolean active;
 
     @Transient

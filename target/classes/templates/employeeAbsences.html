@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes Absences</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:'Segoe UI', Arial, sans-serif; min-height:100vh; padding:2rem; }
+        .container { max-width:900px; margin:0 auto; }
+        h1 { color:#fff; text-align:center; margin-bottom:2rem; font-size:2rem; }
+        .content-card { background:#fff; border-radius:12px; padding:2rem; box-shadow:0 15px 40px rgba(0,0,0,0.3); }
+        table { width:100%; border-collapse:collapse; }
+        th { background:#2a5298; color:#fff; padding:1rem; text-align:left; font-weight:bold; border:none; }
+        td { padding:1rem; border-bottom:1px solid #e0e0e0; }
+        tr:hover { background:#f9f9f9; }
+        .no-data { text-align:center; color:#666; padding:3rem 1rem; font-size:1.1rem; }
+        .button-group { display:flex; gap:1rem; margin-top:2rem; padding-top:2rem; border-top:1px solid #f0f0f0; }
+        .btn { flex:1; padding:1rem; border:none; border-radius:8px; font-weight:bold; cursor:pointer; text-decoration:none; display:flex; align-items:center; justify-content:center; transition:all .3s ease; }
+        .btn-secondary { background:#95a5a6; color:#fff; }
+        .btn-secondary:hover { background:#7f8c8d; transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Mes Absences</h1>
+    
+    <div class="content-card">
+        <div th:if="${absences.size() > 0}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Heures</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="absence : ${absences}">
+                        <td th:text="${#dates.format(absence.date, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${absence.type}"></td>
+                        <td th:text="${absence.hours} + ' h'"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div th:if="${absences.size() == 0}" class="no-data">
+            <p>Aucune absence enregistrée</p>
+        </div>
+
+        <div class="button-group">
+            <a href="/employeeDashboard" class="btn btn-secondary">Retour au Tableau de Bord</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Profil</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:'Segoe UI', Arial, sans-serif; min-height:100vh; padding:2rem; }
+        .container { max-width:700px; margin:0 auto; }
+        h1 { color:#fff; text-align:center; margin-bottom:2rem; font-size:2rem; }
+        .profile-card { background:#fff; border-radius:12px; padding:2.5rem; box-shadow:0 15px 40px rgba(0,0,0,0.3); }
+        .profile-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:2rem; border-bottom:2px solid #f0f0f0; margin-bottom:2rem; }
+        .employee-info { flex:1; }
+        .employee-name { font-size:1.8rem; font-weight:bold; color:#2a5298; margin-bottom:.5rem; }
+        .employee-email { font-size:.95rem; color:#666; }
+        .employee-id { background:#2a5298; color:#fff; padding:.4rem .8rem; border-radius:6px; font-size:.85rem; font-weight:bold; }
+        .profile-section { margin-bottom:2rem; }
+        .section-title { font-size:1.1rem; font-weight:bold; color:#2a5298; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid #e0e0e0; }
+        .profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+        .profile-item { display:flex; flex-direction:column; }
+        .profile-label { font-size:.85rem; font-weight:bold; color:#666; text-transform:uppercase; margin-bottom:.3rem; letter-spacing:.5px; }
+        .profile-value { font-size:1.05rem; color:#333; font-weight:500; }
+        .profile-value.full-width { grid-column:1/-1; }
+        .button-group { display:flex; gap:1rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid #f0f0f0; }
+        .btn { flex:1; padding:1rem; border:none; border-radius:8px; font-weight:bold; cursor:pointer; text-decoration:none; display:flex; align-items:center; justify-content:center; transition:all .3s ease; font-size:1rem; }
+        .btn-secondary { background:#95a5a6; color:#fff; }
+        .btn-secondary:hover { background:#7f8c8d; transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Mon Profil</h1>
+    
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="employee-info">
+                <div class="employee-name" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></div>
+                <div class="employee-email" th:text="${employee.email}"></div>
+            </div>
+            <div class="employee-id" th:text="'ID #' + ${employee.id}"></div>
+        </div>
+
+        <div class="profile-section">
+            <div class="section-title">Informations Professionnelles</div>
+            <div class="profile-grid">
+                <div class="profile-item">
+                    <div class="profile-label">Grade</div>
+                    <div class="profile-value" th:text="${employee.grade ?: 'Non défini'}"></div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Titre du Poste</div>
+                    <div class="profile-value" th:text="${employee.positionTitle ?: 'Non défini'}"></div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Département</div>
+                    <div class="profile-value">
+                        <span th:each="dept : ${departments}" th:if="${dept.id == employee.departmentId}" th:text="${dept.name}">--</span>
+                    </div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Salaire de Base</div>
+                    <div class="profile-value" th:text="${#numbers.formatDecimal(employee.baseSalary, 1, 2, 'COMMA')} + ' €'"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <a href="/employeeDashboard" class="btn btn-secondary">Retour au Tableau de Bord</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

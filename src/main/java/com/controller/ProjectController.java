@@ -4,6 +4,8 @@ import com.model.Project;
 import com.model.Department;
 import com.model.Employee;
 import com.model.ProjectAssignment;
+import com.service.ProjectService;
+import com.service.EmployeeService;
 import com.repository.ProjectRepository;
 import com.repository.DepartmentRepository;
 import com.repository.EmployeeRepository;
@@ -14,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
@@ -35,6 +36,12 @@ public class ProjectController {
 
     @Autowired
     private ProjectAssignmentRepository projectAssignmentRepository;
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     @GetMapping("/list")
     public String listProjects(Model model) {
@@ -63,9 +70,7 @@ public class ProjectController {
     @GetMapping("/assign/form")
     public String assignForm(Model model) {
         List<Project> projects = projectRepository.findAll();
-        List<Employee> employees = employeeRepository.findAll().stream()
-                .filter(Employee::isActive)
-                .collect(Collectors.toList());
+        List<Employee> employees = employeeService.getActiveEmployees();
         model.addAttribute("projects", projects);
         model.addAttribute("employees", employees);
         return "assignEmployee";
@@ -74,15 +79,14 @@ public class ProjectController {
     @GetMapping("/{id:\\d+}/assign")
     public String assignToProjectForm(@PathVariable Integer id, Model model) {
         Optional<Project> project = projectRepository.findById(id);
-        if (project.isPresent()) {
-            List<Employee> employees = employeeRepository.findAll().stream()
-                    .filter(Employee::isActive)
-                    .collect(Collectors.toList());
-            model.addAttribute("project", project.get());
-            model.addAttribute("employees", employees);
-            return "assignEmployeeToProject";
+        if (!project.isPresent()) {
+            return "redirect:/project/list";
         }
-        return "redirect:/project/list";
+        
+        List<Employee> employees = employeeService.getActiveEmployees();
+        model.addAttribute("project", project.get());
+        model.addAttribute("employees", employees);
+        return "assignEmployeeToProject";
     }
 
     @PostMapping("/assign")
@@ -154,16 +158,8 @@ public class ProjectController {
         project.setName(name);
         project.setDescription(description);
         project.setStatus(status);
-        project.setDepartmentId(department_id);
-
-        if (start_date != null && !start_date.isBlank()) {
-            project.setStartDate(Date.valueOf(start_date));
-        }
-        if (end_date != null && !end_date.isBlank()) {
-            project.setEndDate(Date.valueOf(end_date));
-        }
-
-        projectRepository.save(project);
+        
+        projectService.saveProject(project, department_id, start_date, end_date);
         redirectAttributes.addFlashAttribute("message", "Projet créé avec succès");
         return "redirect:/project/list";
     }
@@ -192,24 +188,17 @@ public class ProjectController {
             RedirectAttributes redirectAttributes) {
 
         Optional<Project> projectOpt = projectRepository.findById(id);
-        if (projectOpt.isPresent()) {
-            Project project = projectOpt.get();
-            project.setName(name);
-            project.setDescription(description);
-            project.setStatus(status);
-            project.setDepartmentId(department_id);
-
-            if (start_date != null && !start_date.isBlank()) {
-                project.setStartDate(Date.valueOf(start_date));
-            }
-            if (end_date != null && !end_date.isBlank()) {
-                project.setEndDate(Date.valueOf(end_date));
-            }
-
-            projectRepository.save(project);
-            redirectAttributes.addFlashAttribute("message", "Projet mis à jour avec succès");
+        if (!projectOpt.isPresent()) {
+            return "redirect:/project/list";
         }
 
+        Project project = projectOpt.get();
+        project.setName(name);
+        project.setDescription(description);
+        project.setStatus(status);
+        
+        projectService.saveProject(project, department_id, start_date, end_date);
+        redirectAttributes.addFlashAttribute("message", "Projet mis à jour avec succès");
         return "redirect:/project/list";
     }
 

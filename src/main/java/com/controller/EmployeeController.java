@@ -3,24 +3,30 @@ package com.controller;
 import com.model.Employee;
 import com.model.Department;
 import com.model.User;
+import com.model.Salaire;
+import com.model.Absence;
+import com.model.Payslip;
+import com.model.ProjectAssignment;
+import com.service.EmployeeService;
 import com.repository.EmployeeRepository;
 import com.repository.DepartmentRepository;
 import com.repository.UserRepository;
+import com.repository.SalaireRepository;
+import com.repository.AbsenceRepository;
+import com.repository.PayslipRepository;
+import com.repository.ProjectAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.HashMap;
 import java.util.Map;
-import com.model.Salaire;
-import com.repository.SalaireRepository;
 import java.util.stream.Collectors;
-import org.springframework.web.bind.annotation.ResponseBody;
-import java.sql.Date;
 
 @Controller
 @RequestMapping("/employee")
@@ -38,6 +44,18 @@ public class EmployeeController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AbsenceRepository absenceRepository;
+
+    @Autowired
+    private PayslipRepository payslipRepository;
+
+    @Autowired
+    private ProjectAssignmentRepository projectAssignmentRepository;
+
+    @Autowired
+    private EmployeeService employeeService;
+
     @GetMapping("/list")
     public String listEmployees(
             @RequestParam(required = false) String query,
@@ -46,42 +64,23 @@ public class EmployeeController {
             @RequestParam(required = false) Integer department,
             Model model) {
 
-        List<Employee> employees;
-        
-        if (query != null || grade != null || position != null || department != null) {
-            String queryParam = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
-            String gradeParam = (grade != null && !grade.trim().isEmpty()) ? grade.trim() : null;
-            String positionParam = (position != null && !position.trim().isEmpty()) ? position.trim() : null;
-            
-            employees = employeeRepository.search(queryParam, gradeParam, positionParam, department);
-        } else {
-            employees = employeeRepository.findAll();
-        }
-
-        // Filtrer pour afficher SEULEMENT les employés actifs
-        employees = employees.stream()
-                .filter(Employee::isActive)
-                .collect(Collectors.toList());
+        List<Employee> employees = employeeService.searchEmployees(query, grade, position, department);
 
         List<String> grades = employeeRepository.findDistinctGrades();
         List<String> positions = employeeRepository.findDistinctPositions();
         List<Department> departments = departmentRepository.findAll();
 
-        // Créer une map pour les salaires et départements
         Map<Integer, String> departmentNames = new HashMap<>();
         Map<Integer, java.sql.Date> firstSalaries = new HashMap<>();
         
-        for (Department dept : departments) {
-            departmentNames.put(dept.getId(), dept.getName());
-        }
+        departments.forEach(dept -> departmentNames.put(dept.getId(), dept.getName()));
         
-        for (Employee emp : employees) {
+        employees.forEach(emp -> {
             List<Salaire> salaires = salaireRepository.findByEmployeeId(emp.getId());
             if (!salaires.isEmpty()) {
-                Salaire firstSalaire = salaires.get(0);
-                firstSalaries.put(emp.getId(), firstSalaire.getDate());
+                firstSalaries.put(emp.getId(), salaires.get(0).getDate());
             }
-        }
+        });
 
         model.addAttribute("employees", employees);
         model.addAttribute("grades", grades);
@@ -127,6 +126,21 @@ public class EmployeeController {
         Map<String, Integer> response = new HashMap<>();
         response.put("nextId", maxId + 1);
         return response;
+    }
+
+    @GetMapping("/profile")
+    public String viewProfile(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmployeeId() != null) {
+            Optional<Employee> employee = employeeRepository.findById(user.getEmployeeId());
+            if (employee.isPresent()) {
+                List<Department> departments = departmentRepository.findAll();
+                model.addAttribute("employee", employee.get());
+                model.addAttribute("departments", departments);
+                return "employeeProfile";
+            }
+        }
+        return "redirect:/employeeDashboard";
     }
 
     @PostMapping("/EmployeeCreateServlet")
@@ -248,5 +262,41 @@ public class EmployeeController {
         employeeRepository.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "Employé supprimé avec succès");
         return "redirect:/employee/list";
+    }
+
+    @GetMapping("/absences")
+    public String viewMyAbsences(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmployeeId() != null) {
+            List<Absence> absences = absenceRepository.findByEmployeeId(user.getEmployeeId());
+            absences.sort((a, b) -> b.getDate().compareTo(a.getDate()));
+            model.addAttribute("absences", absences);
+            return "employeeAbsences";
+        }
+        return "redirect:/employeeDashboard";
+    }
+
+    @GetMapping("/payslips")
+    public String viewMyPayslips(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmployeeId() != null) {
+            List<Payslip> payslips = payslipRepository.findAll().stream()
+                    .filter(p -> p.getEmployeeId() == user.getEmployeeId())
+                    .collect(Collectors.toList());
+            model.addAttribute("payslips", payslips);
+            return "employeePayslips";
+        }
+        return "redirect:/employeeDashboard";
+    }
+
+    @GetMapping("/projects")
+    public String viewMyProjects(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getEmployeeId() != null) {
+            List<ProjectAssignment> assignments = projectAssignmentRepository.findByEmployeeId(user.getEmployeeId());
+            model.addAttribute("assignments", assignments);
+            return "employeeProjects";
+        }
+        return "redirect:/employeeDashboard";
     }
 }

@@ -83,7 +83,7 @@
         <td th:text="${payslip.periodMonth}"></td>
         <td th:text="${#dates.format(payslip.generatedAt, 'dd/MM/yyyy HH:mm')}"></td>
         <td>
-            <a th:href="'/payslip/' + ${payslip.id} + '/view'" class="btn">Consulter</a>
+            <a th:href="'/payslip/' + ${payslip.id} + '/view?returnTo=/payslip/list'" class="btn">Consulter</a>
         </td>
     </tr>
 </table>

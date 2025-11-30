@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes Bulletins de Paie</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:linear-gradient(135deg,#1e3c72,#2a5298); font-family:'Segoe UI', Arial, sans-serif; min-height:100vh; padding:2rem; }
+        .container { max-width:900px; margin:0 auto; }
+        h1 { color:#fff; text-align:center; margin-bottom:2rem; font-size:2rem; }
+        .content-card { background:#fff; border-radius:12px; padding:2rem; box-shadow:0 15px 40px rgba(0,0,0,0.3); }
+        table { width:100%; border-collapse:collapse; }
+        th { background:#2a5298; color:#fff; padding:1rem; text-align:left; font-weight:bold; border:none; }
+        td { padding:1rem; border-bottom:1px solid #e0e0e0; }
+        tr:hover { background:#f9f9f9; }
+        .no-data { text-align:center; color:#666; padding:3rem 1rem; font-size:1.1rem; }
+        .action-link { background:#2a5298; color:#fff; padding:.5rem 1rem; border-radius:6px; text-decoration:none; display:inline-block; font-size:.9rem; }
+        .action-link:hover { background:#1e3c72; }
+        .button-group { display:flex; gap:1rem; margin-top:2rem; padding-top:2rem; border-top:1px solid #f0f0f0; }
+        .btn { flex:1; padding:1rem; border:none; border-radius:8px; font-weight:bold; cursor:pointer; text-decoration:none; display:flex; align-items:center; justify-content:center; transition:all .3s ease; }
+        .btn-secondary { background:#95a5a6; color:#fff; }
+        .btn-secondary:hover { background:#7f8c8d; transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Mes Bulletins de Paie</h1>
+    
+    <div class="content-card">
+        <div th:if="${payslips.size() > 0}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mois</th>
+                        <th>Année</th>
+                        <th>Salaire Brut</th>
+                        <th>Déductions</th>
+                        <th>Salaire Net</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="payslip : ${payslips}">
+                        <td th:text="${payslip.periodMonth}"></td>
+                        <td th:text="${payslip.periodYear}"></td>
+                        <td th:text="${#numbers.formatDecimal(payslip.baseSalary, 1, 2, 'COMMA')} + ' €'"></td>
+                        <td th:text="${#numbers.formatDecimal(payslip.deductions, 1, 2, 'COMMA')} + ' €'"></td>
+                        <td th:text="${#numbers.formatDecimal(payslip.netPay, 1, 2, 'COMMA')} + ' €'"></td>
+                        <td>
+                            <a th:href="'/payslip/' + ${payslip.id} + '/view?returnTo=/employee/payslips'" class="action-link">Voir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div th:if="${payslips.size() == 0}" class="no-data">
+            <p>Aucun bulletin de paie disponible</p>
+        </div>
+
+        <div class="button-group">
+            <a href="/employeeDashboard" class="btn btn-secondary">Retour au Tableau de Bord</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

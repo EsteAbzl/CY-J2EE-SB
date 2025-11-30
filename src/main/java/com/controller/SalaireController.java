@@ -4,7 +4,6 @@ import com.model.Salaire;
 import com.model.SalaireExtra;
 import com.repository.SalaireRepository;
 import com.repository.SalaireExtraRepository;
-import com.repository.EmployeeRepository;
 import com.util.RequirePermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +23,6 @@ public class SalaireController {
 
     @Autowired
     private SalaireExtraRepository salaireExtraRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
 
     @GetMapping("/list")
     public String listSalaires(Model model) {

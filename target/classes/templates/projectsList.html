@@ -40,10 +40,10 @@
             <td th:text="${#dates.format(project.startDate, 'dd/MM/yyyy')}"></td>
             <td th:text="${#dates.format(project.endDate, 'dd/MM/yyyy')}"></td>
             <td>
-                <span th:if="${project.departmentId}">
-                    <span th:each="dept : ${departments}" th:if="${dept.id == project.departmentId}" th:text="${dept.name}"></span>
+                <span th:if="${project.department}">
+                    <span th:text="${project.department.name}"></span>
                 </span>
-                <span th:unless="${project.departmentId}">-</span>
+                <span th:unless="${project.department}">-</span>
             </td>
             <td th:text="${project.status}"></td>
             <td>

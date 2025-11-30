@@ -2,8 +2,8 @@ package com.controller;
 
 import com.model.Absence;
 import com.model.Employee;
+import com.service.EmployeeService;
 import com.repository.AbsenceRepository;
-import com.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,26 +22,20 @@ public class AbsenceController {
     private AbsenceRepository absenceRepository;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
 
     @GetMapping("/list")
     public String listAbsences(
             @RequestParam(required = false) Integer employeeId,
             Model model) {
-        List<Absence> absences;
-
-        if (employeeId != null && employeeId > 0) {
-            absences = absenceRepository.findByEmployeeId(employeeId);
-        } else {
-            absences = absenceRepository.findAll();
-        }
         
-        // Trier du plus récent au moins récent
+        List<Absence> absences = (employeeId != null && employeeId > 0) 
+            ? absenceRepository.findByEmployeeId(employeeId)
+            : absenceRepository.findAll();
+        
         absences.sort((a, b) -> b.getDate().compareTo(a.getDate()));
 
-        List<Employee> employees = employeeRepository.findAll().stream()
-                .filter(Employee::isActive)
-                .collect(java.util.stream.Collectors.toList());
+        List<Employee> employees = employeeService.getActiveEmployees();
 
         model.addAttribute("absences", absences);
         model.addAttribute("employees", employees);

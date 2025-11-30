@@ -254,7 +254,8 @@ public class PayslipController {
     }
 
     @GetMapping("/{id}/view")
-    public String viewPayslipDetail(@PathVariable Integer id, Model model) {
+    public String viewPayslipDetail(@PathVariable Integer id, 
+            @RequestParam(required = false) String returnTo, Model model) {
         Optional<Payslip> payslip = payslipRepository.findById(id);
         if (payslip.isPresent()) {
             Payslip p = payslip.get();
@@ -289,6 +290,7 @@ public class PayslipController {
             model.addAttribute("employeeName", employeeName);
             model.addAttribute("bonuses", bonusList);
             model.addAttribute("deductions", deductionsList);
+            model.addAttribute("returnTo", returnTo != null ? returnTo : "/payslip/list");
             
             return "payslipDetail";
         }

@@ -193,17 +193,10 @@
     <!-- Section Bonus -->
     <div class="details-section">
         <h3>Bonus</h3>
-        <table class="details-table" th:if="${bonuses.size() > 0}">
-            <tr>
-                <th>Motif</th>
-                <th class="montant">Montant</th>
-            </tr>
-            <tr th:each="bonus : ${bonuses}">
-                <td th:text="${bonus.motif}"></td>
-                <td class="montant" th:text="'+' + ${bonus.montant} + ' €'"></td>
-            </tr>
-        </table>
-        <div th:if="${bonuses.size() == 0}" class="empty-message">
+        <div th:if="${payslip.bonuses > 0}" class="empty-message">
+            <strong th:text="'+ ' + ${#numbers.formatDecimal(payslip.bonuses, 1, 2, 'COMMA')} + ' €'"></strong>
+        </div>
+        <div th:if="${payslip.bonuses == 0}" class="empty-message">
             Aucun bonus
         </div>
     </div>
@@ -211,17 +204,10 @@
     <!-- Section Malus/Déductions -->
     <div class="details-section">
         <h3>Malus / Déductions</h3>
-        <table class="details-table" th:if="${deductions.size() > 0}">
-            <tr>
-                <th>Motif</th>
-                <th class="montant">Montant</th>
-            </tr>
-            <tr th:each="deduction : ${deductions}">
-                <td th:text="${deduction.motif}"></td>
-                <td class="montant" th:text="'-' + ${deduction.montant} + ' €'"></td>
-            </tr>
-        </table>
-        <div th:if="${deductions.size() == 0}" class="empty-message">
+        <div th:if="${payslip.deductions > 0}" class="empty-message">
+            <strong th:text="'- ' + ${#numbers.formatDecimal(payslip.deductions, 1, 2, 'COMMA')} + ' €'"></strong>
+        </div>
+        <div th:if="${payslip.deductions == 0}" class="empty-message">
             Aucune déduction
         </div>
     </div>
@@ -239,7 +225,7 @@
     </div>
 
     <div class="actions">
-        <a href="/payslip/list" class="btn">← Retour</a>
+        <a th:href="${returnTo}" class="btn">← Retour</a>
         <button class="btn btn-print" onclick="window.print()">Imprimer</button>
     </div>
 </div>
